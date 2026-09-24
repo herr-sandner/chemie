@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verhältnisformel-Trainer</title>
+<style>
+:root{
+  --green:#2e7d32; --green2:#4caf50;
+  --red:#b71c1c; --red-bg:#fdecec; --red-btn:#f9dcdc; --red-bd:#e08c8c; --red-blk:#f4b9b9;
+  --blue:#1a237e; --blue-bg:#ececfd; --blue-btn:#dcdcfa; --blue-bd:#8e92e6; --blue-blk:#b9bbf6;
+  --grey:#efefef; --line:#333; --ok:#2e9e3a; --bad:#c62828; --txt:#1d1d1d;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#f5f5f5;color:var(--txt);
+  font-family:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+.app{max-width:820px;margin:10px auto;background:#fff;border-radius:12px;
+  box-shadow:0 4px 16px rgba(0,0,0,.12);padding:14px 20px 22px}
+.bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.tog{flex:1 1 140px;max-width:190px;background:var(--grey);border:1px solid #777;border-radius:6px;
+  padding:6px 8px;font:inherit;font-size:14px;line-height:1.25;cursor:pointer;color:inherit}
+.tog b{display:block}
+.tog:hover{background:#e3e3e3}
+.intro{margin:18px 0 4px;border:1px solid #ddd;border-radius:10px;background:#fafafa;
+  padding:22px 18px 26px;text-align:center}
+.intro h1{font-size:clamp(22px,4.5vw,32px);margin:8px 0 14px}
+.intro p{font-size:clamp(15px,2.6vw,19px);margin:8px 0;line-height:1.4}
+.legend{font-size:14px;color:#555}
+.how{display:inline-block;text-align:left;margin:6px auto 4px;padding-left:22px;font-size:clamp(14px,2.4vw,17px);line-height:1.5;max-width:560px}
+.go{margin-top:20px;background:var(--green2);color:#fff;border:1px solid #2f7a33;border-radius:6px;
+  font:inherit;font-weight:700;font-size:20px;padding:14px 38px;cursor:pointer}
+.go:hover{background:#43a047}
+.status{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
+  margin-top:14px;padding-bottom:8px;border-bottom:1px solid #e3e3e3;min-height:48px}
+.status .nr,.status .pts{font-weight:700;font-size:16px;white-space:nowrap}
+.ask{text-align:center;font-size:16px;color:#444}
+.msg{text-align:center;font-weight:700;font-size:17px;line-height:1.35;min-height:24px;margin:8px 0 0}
+.bal{color:var(--ok);font-weight:700}
+.msg.ok{color:var(--ok)} .msg.bad{color:var(--bad)} .msg.info{color:#333}
+.task{text-align:center;font-size:clamp(24px,5.5vw,40px);font-weight:700;color:#333;margin:10px 0 8px}
+.stage{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;gap:6px}
+.cnt{font-size:30px;font-weight:700;text-align:center}
+.cnt.r{color:#d23b3b}.cnt.bl{color:#3b40d2}
+.box{border:2.5px solid #111;min-height:220px;display:flex;flex-direction:column;padding:6px;gap:6px;background:#fff}
+.row{display:flex;flex-wrap:nowrap;min-height:96px;flex:1;align-items:stretch;position:relative}
+.row .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:14px;pointer-events:none}
+.blk{border:1px solid;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  font-weight:700;font-size:clamp(14px,2.6vw,20px);cursor:pointer;overflow:hidden;padding:2px}
+.blk.c{background:var(--red-blk);border-color:#d77;color:#6d0f0f}
+.blk.a{background:var(--blue-blk);border-color:#777ee0;color:#0e1470}
+.blk:hover{filter:brightness(.95)}
+.dots{display:flex;gap:3px;flex-wrap:wrap;justify-content:center}
+.dot{width:15px;height:15px;border-radius:50%;font-size:12px;line-height:14px;text-align:center;font-weight:700;background:#fff}
+.c .dot{border:1.5px solid #c33;color:#c33}.a .dot{border:1.5px solid #3439c9;color:#3439c9}
+.sums{display:flex;justify-content:space-between;font-size:14px;color:#555;margin:4px 54px 0}
+.under{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin:12px 0 14px;gap:8px}
+.formula{grid-column:2;font-size:28px;font-weight:700;min-height:36px;text-align:center}
+.btns{grid-column:3;display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.btns.l{grid-column:1;justify-content:flex-start}
+.b{background:var(--grey);border:1px solid #777;border-radius:5px;padding:9px 16px;font:inherit;font-size:16px;cursor:pointer;color:inherit}
+.b:hover{background:#e2e2e2}
+.b.pri{background:var(--green2);color:#fff;border-color:#2f7a33;font-weight:700}
+.b.pri:hover{background:#43a047}
+.b[disabled]{opacity:.45;cursor:default}
+.pal{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.panel{border-radius:8px;padding:6px;display:grid;grid-template-columns:1fr 1fr;gap:6px;align-content:start}
+.panel.c{background:var(--red-bg);border:1px solid #f0b8b8}
+.panel.a{background:var(--blue-bg);border:1px solid #c3c5f3}
+.ion{border-radius:5px;padding:10px 4px;font:inherit;font-weight:700;font-size:18px;cursor:pointer}
+.panel.c .ion{background:var(--red-btn);border:1px solid var(--red-bd);color:#7a1b1b}
+.panel.a .ion{background:var(--blue-btn);border:1px solid var(--blue-bd);color:#1b2186}
+.ion:hover{filter:brightness(.94)} .ion:active{transform:translateY(1px)}
+.tip{margin:10px 0 0;padding:8px 12px;border-left:4px solid var(--green);background:#f1f8f1;font-size:15px;line-height:1.4;display:none}
+.win{text-align:center;padding:30px 10px}
+.win h2{color:var(--green);font-size:30px;margin:8px 0}
+sup,sub{font-size:.62em;line-height:0}
+.hidden{display:none!important}
+@media (max-width:560px){
+  .app{padding:10px 12px 16px;margin:0;border-radius:0}
+  .stage{grid-template-columns:30px 1fr 30px}
+  .cnt{font-size:22px}
+  .sums{margin:4px 36px 0}
+  .under{grid-template-columns:1fr;justify-items:center}
+  .formula,.btns,.btns.l{grid-column:1;justify-content:center}
+  .ion{font-size:16px;padding:9px 2px}
+  .status{grid-template-columns:1fr 1fr}
+  .ask{grid-column:1/3;grid-row:2}
+  .status .pts{text-align:right}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="bar">
+    <button class="tog hidden" id="restart">Neu starten</button>
+    <button class="tog" id="tMode">Modus:<b id="vMode">Lernen</b></button>
+    <button class="tog" id="tLvl">Level:<b id="vLvl">Basis ★</b></button>
+  </div>
+
+  <!-- Startbildschirm -->
+  <section class="intro" id="intro">
+    <h1>Salze: Verhältnisformel-Trainer</h1>
+    <p>Gleiche die Ionenladungen aus und finde die richtige Verhältnisformel.</p>
+    <ol class="how">
+      <li>Lies den Namen des Salzes und überlege: Welche Ionen stecken darin?</li>
+      <li>Tippe die Ionen unten an – sie landen im Kasten. Antippen im Kasten entfernt sie wieder.</li>
+      <li>Sind die rote und die blaue Reihe gleich lang, sind die Ladungen ausgeglichen.</li>
+    </ol>
+    <p>Im Testmodus gibt es keine Hilfen. Erreiche 1000 Punkte zum Gewinnen!</p>
+    <p class="legend">★ Basis: Hauptgruppen-Ionen · ★★ Standard: + Metalle mit römischer Zahl · ★★★ Experte: + Molekül-Ionen</p>
+    <button class="go" id="start">Spiel starten →</button>
+  </section>
+
+  <!-- Spiel -->
+  <section id="game" class="hidden">
+    <div class="status">
+      <span class="nr" id="nr">Salz-Nr. 1</span>
+      <span class="ask">Stelle die Verhältnisformel auf:</span>
+      <span class="pts" id="pts">Punkte: 0 / 1000</span>
+    </div>
+    <div class="task" id="task">–</div>
+    <div class="stage">
+      <div class="cnt r" id="nC"></div>
+      <div class="box" id="box">
+        <div class="row" id="rowC"><div class="ph">Kationen (positiv) hierher</div></div>
+        <div class="row" id="rowA"><div class="ph">Anionen (negativ) hierher</div></div>
+      </div>
+      <div class="cnt bl" id="nA"></div>
+    </div>
+    <div class="sums" id="sums"><span id="sC"></span><span id="bal"></span><span id="sA"></span></div>
+    <div class="msg info" id="msg" role="status" aria-live="polite"></div>
+    <div class="under">
+      <div class="btns l"><button class="b" id="clear">Leeren</button><button class="b" id="tipBtn">Tipp</button></div>
+      <div class="formula" id="formula"></div>
+      <div class="btns"><button class="b pri" id="check">Prüfen</button><button class="b pri hidden" id="next">Weiter →</button></div>
+    </div>
+    <div class="tip" id="tip"></div>
+    <div class="pal" style="margin-top:12px">
+      <div class="panel c" id="palC"></div>
+      <div class="panel a" id="palA"></div>
+    </div>
+  </section>
+
+  <section class="win hidden" id="win"></section>
+</div>
+
+<script>
+"use strict";
+/* ---------- Ionen ---------- */
+// lvl: ab welchem Level die Ionen erscheinen; poly: Molekül-Ion (Klammern in der Formel)
+const CAT = [
+  {id:"Li",  s:"Li",  q:1, n:"Lithium",    l:1},
+  {id:"Na",  s:"Na",  q:1, n:"Natrium",    l:1},
+  {id:"K",   s:"K",   q:1, n:"Kalium",     l:1},
+  {id:"Mg",  s:"Mg",  q:2, n:"Magnesium",  l:1},
+  {id:"Ca",  s:"Ca",  q:2, n:"Calcium",    l:1},
+  {id:"Ba",  s:"Ba",  q:2, n:"Barium",     l:1},
+  {id:"Al",  s:"Al",  q:3, n:"Aluminium",  l:1},
+  {id:"Fe2", s:"Fe",  q:2, n:"Eisen(II)",  l:2},
+  {id:"Fe3", s:"Fe",  q:3, n:"Eisen(III)", l:2},
+  {id:"Cu1", s:"Cu",  q:1, n:"Kupfer(I)",  l:2},
+  {id:"Cu2", s:"Cu",  q:2, n:"Kupfer(II)", l:2},
+  {id:"Pb2", s:"Pb",  q:2, n:"Blei(II)",   l:2},
+  {id:"Zn",  s:"Zn",  q:2, n:"Zink",       l:2},
+  {id:"Ag",  s:"Ag",  q:1, n:"Silber",     l:2},
+  {id:"NH4", s:"NH<sub>4</sub>", q:1, n:"Ammonium", l:3, poly:true}
+];
+const AN = [
+  {id:"F",   s:"F",  q:1, n:"Fluorid",   l:1},
+  {id:"Cl",  s:"Cl", q:1, n:"Chlorid",   l:1},
+  {id:"Br",  s:"Br", q:1, n:"Bromid",    l:1},
+  {id:"I",   s:"I",  q:1, n:"Iodid",     l:1},
+  {id:"O",   s:"O",  q:2, n:"Oxid",      l:1},
+  {id:"S",   s:"S",  q:2, n:"Sulfid",    l:1},
+  {id:"N",   s:"N",  q:3, n:"Nitrid",    l:1},
+  {id:"P",   s:"P",  q:3, n:"Phosphid",  l:2},
+  {id:"OH",  s:"OH", q:1, n:"Hydroxid",  l:3, poly:true},
+  {id:"NO3", s:"NO<sub>3</sub>", q:1, n:"Nitrat",   l:3, poly:true},
+  {id:"SO4", s:"SO<sub>4</sub>", q:2, n:"Sulfat",   l:3, poly:true},
+  {id:"CO3", s:"CO<sub>3</sub>", q:2, n:"Carbonat", l:3, poly:true},
+  {id:"PO4", s:"PO<sub>4</sub>", q:3, n:"Phosphat", l:3, poly:true}
+];
+const byId = {}; CAT.concat(AN).forEach(i => byId[i.id] = i);
+
+// Kombinationen, die es als Salz (praktisch) nicht gibt
+const NO = {
+  N:  c => !["Li","Mg","Ca","Ba","Al"].includes(c),
+  P:  c => !["Na","K","Mg","Ca","Al","Zn","Fe3"].includes(c),
+  CO3:c => ["Al","Fe3","Cu1"].includes(c),
+  OH: c => ["Ag","Cu1","NH4"].includes(c),
+  F:  c => c === "Cu1",
+  I:  c => ["Fe3","Cu2"].includes(c),
+  O:  c => c === "NH4",
+  S:  c => c === "NH4"
+};
+const allowed = (c,a) => !(NO[a] && NO[a](c)) && !(c === "Cu1" && ["NO3","SO4","PO4"].includes(a));
+
+/* ---------- Hilfsfunktionen ---------- */
+const $ = id => document.getElementById(id);
+const gcd = (a,b) => b ? gcd(b, a % b) : a;
+const lcm = (a,b) => a * b / gcd(a,b);
+const chg = (q,sign) => (q > 1 ? q : "") + (sign > 0 ? "+" : "−");
+const ionHTML = (ion,sign) => ion.s + "<sup>" + chg(ion.q,sign) + "</sup>";
+const part = (ion,k) => k === 1 ? ion.s : (ion.poly ? "(" + ion.s + ")" : ion.s) + "<sub>" + k + "</sub>";
+const formulaHTML = (c,nc,a,na) => part(c,nc) + part(a,na);
+const saltName = (c,a) => c.n.endsWith(")") ? c.n + "-" + a.n.toLowerCase() : c.n + a.n.toLowerCase();
+const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const PRAISE = ["Klasse gemacht! Das ist absolut richtig.","Stark – Ladungen ausgeglichen!","Richtig! Weiter so.","Perfekt – das ist die Verhältnisformel.","Sehr gut!"];
+
+/* ---------- Zustand ---------- */
+const S = { mode:"Lernen", lvl:1, nr:0, pts:0, solved:0, errTotal:0, task:null,
+            tries:0, tips:0, done:false, deck:[], row:{c:[], a:[]} };
+const GOAL = 1000, MAXROW = 12;
+
+function buildDeck(){
+  const cs = CAT.filter(i => i.l <= S.lvl), as = AN.filter(i => i.l <= S.lvl);
+  const all = [];
+  cs.forEach(c => as.forEach(a => { if (allowed(c.id,a.id)) all.push({c,a}); }));
+  // bevorzugt Aufgaben mit mind. einem Ion des aktuellen Levels
+  const top = all.filter(t => Math.max(t.c.l,t.a.l) === S.lvl);
+  const rest = all.filter(t => Math.max(t.c.l,t.a.l) < S.lvl);
+  const k = S.lvl === 1 ? all.length : Math.round(top.length * 0.4);
+  S.deck = shuffle(top.concat(shuffle(rest).slice(0, S.lvl === 3 ? 0 : k)));
+}
+
+function newTask(){
+  if (!S.deck.length) buildDeck();
+  const t = S.deck.pop(), L = lcm(t.c.q, t.a.q);
+  S.task = {c:t.c, a:t.a, nc:L / t.c.q, na:L / t.a.q};
+  S.nr++; S.tries = 0; S.tips = 0; S.done = false; S.row = {c:[], a:[]};
+  $("nr").textContent = "Salz-Nr. " + S.nr;
+  $("task").textContent = saltName(t.c, t.a);
+  setMsg("", "info");
+  $("tip").style.display = "none";
+  $("check").classList.remove("hidden"); $("next").classList.add("hidden");
+  render();
+}
+
+function setMsg(t,cls){ const m = $("msg"); m.textContent = t; m.className = "msg " + cls; }
+
+function palette(){
+  const mk = (list,sign,box) => {
+    box.innerHTML = "";
+    list.filter(i => i.l <= S.lvl).sort((x,y) => x.q - y.q).forEach(ion => {
+      const b = document.createElement("button");
+      b.className = "ion"; b.innerHTML = ionHTML(ion,sign);
+      b.setAttribute("aria-label", ion.n + "-Ion");
+      b.onclick = () => add(sign > 0 ? "c" : "a", ion.id);
+      box.appendChild(b);
+    });
+  };
+  mk(CAT, 1, $("palC")); mk(AN, -1, $("palA"));
+}
+
+function sum(r){ return S.row[r].reduce((s,id) => s + byId[id].q, 0); }
+
+function add(r,id){
+  if (S.done) return;
+  if (sum(r) + byId[id].q > MAXROW){ setMsg("Da passt nichts mehr hinein – entferne Ionen durch Antippen.", "bad"); return; }
+  S.row[r].push(id); clearBad(); render();
+}
+function removeAt(r,i){ if (S.done) return; S.row[r].splice(i,1); clearBad(); render(); }
+function clearBad(){ if ($("msg").classList.contains("bad")) setMsg("", "info"); }
+
+function render(){
+  const learn = S.mode === "Lernen";
+  const sc = sum("c"), sa = sum("a"), unit = 100 / Math.max(6, sc, sa);
+  ["c","a"].forEach(r => {
+    const row = $(r === "c" ? "rowC" : "rowA");
+    row.innerHTML = S.row[r].length ? "" :
+      '<div class="ph">' + (r === "c" ? "Kationen (positiv) hierher" : "Anionen (negativ) hierher") + "</div>";
+    S.row[r].forEach((id,i) => {
+      const ion = byId[id], d = document.createElement("div");
+      d.className = "blk " + r; d.style.width = (ion.q * unit) + "%";
+      d.title = "Antippen zum Entfernen";
+      let dots = ""; for (let k = 0; k < ion.q; k++) dots += '<span class="dot">' + (r === "c" ? "+" : "−") + "</span>";
+      d.innerHTML = "<span>" + ionHTML(ion, r === "c" ? 1 : -1) + '</span><span class="dots">' + dots + "</span>";
+      d.onclick = () => removeAt(r,i);
+      row.appendChild(d);
+    });
+  });
+  const nc = S.row.c.length, na = S.row.a.length;
+  $("nC").textContent = nc ? nc + "×" : ""; $("nA").textContent = na ? na + "×" : "";
+  $("sums").style.visibility = learn ? "visible" : "hidden";
+  $("sC").textContent = "Ladung: +" + sc; $("sA").textContent = "Ladung: −" + sa;
+  $("bal").textContent = sc && sc === sa ? "= ausgeglichen ✓" : ""; $("bal").className = "bal";
+  $("tipBtn").classList.toggle("hidden", !learn);
+  // Formel live (Lernen) – nur wenn je Zeile eine Ionensorte
+  const uc = [...new Set(S.row.c)], ua = [...new Set(S.row.a)];
+  let f = "";
+  if ((learn || S.done) && uc.length === 1 && ua.length === 1) f = formulaHTML(byId[uc[0]], nc, byId[ua[0]], na);
+  $("formula").innerHTML = f;
+  $("pts").textContent = S.mode === "Test" ? "Punkte: " + S.pts + " / " + GOAL : "Gelöst: " + S.solved;
+}
+
+function check(){
+  if (S.done) return;
+  const t = S.task, learn = S.mode === "Lernen";
+  const uc = [...new Set(S.row.c)], ua = [...new Set(S.row.a)];
+  const sc = sum("c"), sa = sum("a");
+  let err = null;
+  if (!S.row.c.length || !S.row.a.length) { setMsg("Setze Kationen UND Anionen in den Kasten.", "bad"); return; }
+  if (uc.length > 1 || ua.length > 1) err = "Ein Salz aus diesem Namen enthält nur eine Kation- und eine Anion-Sorte.";
+  else if (uc[0] !== t.c.id) {
+    const ci = byId[uc[0]];
+    err = (ci.s === t.c.s) ? "Richtiges Element, falsche Ladung: Die römische Zahl gibt die Ladung des Metall-Ions an."
+                           : "Das Kation passt nicht zum Namen.";
+  }
+  else if (ua[0] !== t.a.id) {
+    const ai = byId[ua[0]];
+    err = "Das Anion passt nicht zum Namen." +
+      (t.a.poly && !ai.poly ? " Gesucht ist ein Molekül-Ion aus mehreren Atomen." :
+       !t.a.poly && ai.poly ? " Hier ist ein einatomiges Anion gemeint." : "");
+  }
+  else if (sc !== sa) err = learn ? "Noch nicht ausgeglichen: +" + sc + " und −" + sa + ". Beide Ladungssummen müssen gleich sein."
+                                  : "Die Ladungen sind noch nicht ausgeglichen.";
+  else if (S.row.c.length !== t.nc) err = "Ausgeglichen – aber die Verhältnisformel gibt das kleinste ganzzahlige Verhältnis an. Kürze!";
+  if (err){ S.tries++; S.errTotal++; setMsg(err, "bad"); return; }
+
+  // richtig
+  S.done = true; S.solved++;
+  const gain = S.tries === 0 ? 100 : S.tries === 1 ? 50 : 20;
+  if (S.mode === "Test") S.pts += gain;
+  setMsg(PRAISE[Math.floor(Math.random() * PRAISE.length)] + (S.mode === "Test" ? "  +" + gain : ""), "ok");
+  $("check").classList.add("hidden"); $("next").classList.remove("hidden");
+  if (learn){
+    const L = lcm(t.c.q, t.a.q);
+    showTip("kgV der Ladungen " + t.c.q + " und " + t.a.q + " ist " + L + ": " + t.nc + " × " + ionHTML(t.c,1) +
+            " = +" + L + " und " + t.na + " × " + ionHTML(t.a,-1) + " = −" + L + " → <b>" + formulaHTML(t.c,t.nc,t.a,t.na) + "</b>");
+  }
+  render();
+  if (S.mode === "Test" && S.pts >= GOAL) setTimeout(win, 900);
+}
+
+function showTip(html){ const e = $("tip"); e.innerHTML = html; e.style.display = "block"; }
+function tip(){
+  const t = S.task; S.tips++;
+  if (S.tips === 1) showTip("Die Ionen: " + t.c.n + " → " + ionHTML(t.c,1) + ", " + t.a.n + " → " + ionHTML(t.a,-1) + ".");
+  else showTip("Die Ionen: " + ionHTML(t.c,1) + " und " + ionHTML(t.a,-1) + ". Suche das kleinste gemeinsame Vielfache der Ladungszahlen: kgV(" +
+               t.c.q + ", " + t.a.q + ") = " + lcm(t.c.q, t.a.q) + ". Beide Zeilen müssen gleich lang werden.");
+}
+
+function win(){
+  $("game").classList.add("hidden");
+  const w = $("win"); w.classList.remove("hidden");
+  w.innerHTML = "<h2>Geschafft! 🎉</h2><p style='font-size:19px'>" + GOAL + " Punkte mit " + S.solved + " Salzen erreicht.<br>Fehlversuche: " + S.errTotal +
+    "</p><p>Level: " + $("vLvl").textContent + "</p><button class='go' id='again'>Nochmal spielen</button>";
+  $("again").onclick = start;
+}
+
+function start(){
+  Object.assign(S, {nr:0, pts:0, solved:0, errTotal:0});
+  buildDeck(); palette();
+  $("intro").classList.add("hidden"); $("win").classList.add("hidden");
+  $("game").classList.remove("hidden"); $("restart").classList.remove("hidden");
+  newTask();
+}
+
+/* ---------- Bedienung ---------- */
+const LV = ["", "Basis ★", "Standard ★★", "Experte ★★★"];
+$("start").onclick = start;
+$("restart").onclick = start;
+$("tMode").onclick = () => { S.mode = S.mode === "Lernen" ? "Test" : "Lernen"; $("vMode").textContent = S.mode; if (!$("game").classList.contains("hidden")) start(); };
+$("tLvl").onclick = () => { S.lvl = S.lvl % 3 + 1; $("vLvl").textContent = LV[S.lvl]; if (!$("game").classList.contains("hidden")) start(); };
+$("check").onclick = check;
+$("next").onclick = newTask;
+$("clear").onclick = () => { if (!S.done){ S.row = {c:[], a:[]}; render(); } };
+$("tipBtn").onclick = tip;
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.target.tagName !== "BUTTON" && !$("game").classList.contains("hidden")) { S.done ? newTask() : check(); }
+});
+</script>
+</body>
+</html>
