@@ -16,12 +16,8 @@ html,body{margin:0;background:#f5f5f5;color:var(--txt);
   font-family:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
 .app{max-width:820px;margin:10px auto;background:#fff;border-radius:12px;
   box-shadow:0 4px 16px rgba(0,0,0,.12);padding:14px 20px 22px}
-.hs{display:flex;justify-content:space-between;align-items:center;gap:8px;
-  border-top:1.5px solid var(--line);border-bottom:1.5px solid var(--line);
-  padding:4px 2px;font-size:13px;margin-bottom:12px}
-.hs .mid{color:var(--green);font-weight:700;font-size:15px;text-align:center}
 .bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.tog{flex:1 1 140px;max-width:190px;background:var(--grey);border:1px solid #777;border-radius:6px;
+.tog{flex:1 1 140px;max-width:220px;background:var(--grey);border:1px solid #777;border-radius:6px;
   padding:6px 8px;font:inherit;font-size:14px;line-height:1.25;cursor:pointer;color:inherit}
 .tog b{display:block}
 .tog:hover{background:#e3e3e3}
@@ -50,74 +46,59 @@ html,body{margin:0;background:#f5f5f5;color:var(--txt);
 .ch .n{display:block;font-size:15px;color:#555;margin-top:4px}
 .ch:hover{background:#f0f0f0}
 .ch.okc{border-color:var(--ok);background:#eaf6ea}.ch.badc{border-color:var(--bad);background:#fbeaea}
-.half{display:grid;gap:12px;margin:0 auto;max-width:640px}
-.hl{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;font-size:24px;font-weight:600;
-  padding:12px;border-radius:8px}
-.hl.ox{background:var(--red-bg);border:1px solid #f0b8b8}.hl.re{background:var(--blue-bg);border:1px solid #c3c5f3}
-.hl .lab{font-size:15px;font-weight:700;width:100%;text-align:center;color:#555}
-.hl.wrong{outline:3px solid var(--bad)}
-.stp{display:inline-flex;align-items:center;border:1.5px solid #777;border-radius:6px;background:#fff;overflow:hidden}
-.stp button{border:0;background:#eee;font:inherit;font-size:20px;width:36px;height:40px;cursor:pointer}
-.stp button:hover{background:#ddd}
-.stp span{min-width:34px;text-align:center;font-weight:700}
+
+/* Gleichungszeilen mit Eingabefeldern */
+.half{display:grid;gap:12px;margin:0 auto;max-width:680px}
+.hl{padding:10px 12px 12px;border-radius:8px;text-align:center}
+.hl.ox{background:var(--red-bg);border:1px solid #f0b8b8}
+.hl.re{background:var(--blue-bg);border:1px solid #c3c5f3}
+.hl.fg{background:#f6f6f6;border:1px solid #ddd}
+.hl .lab{display:block;font-size:15px;font-weight:700;color:#555;margin-bottom:2px}
+.eql{font-size:clamp(20px,4vw,26px);font-weight:600;line-height:2.1}
+.num{width:1.9em;font:inherit;font-weight:700;text-align:center;border:1.5px solid #888;border-radius:5px;
+  padding:0;background:#fff;color:#1d1d1d;line-height:1.25}
+.num:focus{outline:2px solid var(--green);outline-offset:1px}
+.num.wrong{border-color:var(--bad);background:#fbeaea}
+.num.right,.num:disabled{border-color:var(--ok);background:#eaf6ea;color:#1d1d1d;opacity:1}
+.up{font-size:.62em;vertical-align:.8em}
+.dn{font-size:.62em;vertical-align:-.3em}
+.up .num,.dn .num{width:2.1em}
+.elc{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
+.eql .elc{vertical-align:bottom;line-height:1.15;gap:0}
+.onl{font-size:.55em;color:#555;font-weight:700}
+.hint{text-align:center;font-size:14px;color:#666;margin:10px 0 0}
+
+/* Oxidationszahlen */
 .eqon{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:6px 12px;font-size:26px;font-weight:600;margin:8px 0}
 .spc{display:inline-flex;align-items:flex-end;gap:0}
-.elc{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
 .elc select{font:inherit;font-size:15px;padding:3px 2px;border:1.5px solid #888;border-radius:5px;background:#fff}
 .elc select.wrong{border-color:var(--bad);background:#fbeaea}
 .elc select.right{border-color:var(--ok);background:#eaf6ea}
 .op{padding-bottom:2px}
-.stage{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;gap:6px}
-.cnt{font-size:30px;font-weight:700;text-align:center}
-.cnt.r{color:#d23b3b}.cnt.bl{color:#3b40d2}
-.box{border:2.5px solid #111;min-height:220px;display:flex;flex-direction:column;padding:6px;gap:6px;background:#fff}
-.row{display:flex;flex-wrap:nowrap;min-height:96px;flex:1;align-items:stretch;position:relative}
-.row .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:14px;pointer-events:none;text-align:center}
-.blk{border:1px solid;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-  font-weight:700;font-size:clamp(14px,2.6vw,20px);cursor:pointer;overflow:hidden;padding:2px}
-@keyframes pop{from{transform:scale(.85);opacity:.3}to{transform:none;opacity:1}}
-.blk.d{background:var(--red-blk);border-color:#d77;color:#6d0f0f}
-.blk.a{background:var(--blue-blk);border-color:#777ee0;color:#0e1470}
-.blk:hover{filter:brightness(.95)}
-.dots{display:flex;gap:3px;flex-wrap:wrap;justify-content:center}
-.dot{min-width:17px;height:17px;border-radius:9px;font-size:10px;line-height:15px;text-align:center;font-weight:700;background:#fff;padding:0 2px}
-.d .dot{border:1.5px solid #c33;color:#c33}.a .dot{border:1.5px solid #3439c9;color:#3439c9}
-.sums{display:flex;justify-content:space-between;font-size:14px;color:#555;margin:4px 54px 0}
-.addb{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-.ion{border-radius:6px;padding:12px 4px;font:inherit;font-weight:700;font-size:19px;cursor:pointer}
-.ion small{display:block;font-weight:400;font-size:13px;margin-top:2px}
-.ion.d{background:var(--red-btn);border:1px solid var(--red-bd);color:#7a1b1b}
-.ion.a{background:var(--blue-btn);border:1px solid var(--blue-bd);color:#1b2186}
-.ion:hover{filter:brightness(.94)}
-.coefs{text-align:center;font-size:24px;font-weight:700;min-height:34px;margin-top:10px}
+
+.angabe{text-align:center;font-size:16px;color:#1b2186;background:var(--blue-bg);border:1px solid #c3c5f3;
+  border-radius:8px;padding:5px 12px;margin:4px auto 8px;max-width:520px}
+.eql .mul{color:var(--green);white-space:nowrap}
+.eql.l2{border-top:1px dashed #bbb;margin-top:6px;padding-top:2px}
 .ctrl{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:14px 0 4px;flex-wrap:wrap}
 .ctrl div{display:flex;gap:6px}
 .b{background:var(--grey);border:1px solid #777;border-radius:5px;padding:9px 16px;font:inherit;font-size:16px;cursor:pointer;color:inherit}
 .b:hover{background:#e2e2e2}
 .b.pri{background:var(--green2);color:#fff;border-color:#2f7a33;font-weight:700}
 .b.pri:hover{background:#43a047}
-.tip{margin:10px 0 0;padding:8px 12px;border-left:4px solid var(--green);background:#f1f8f1;font-size:15px;line-height:1.5;display:none}
-.sol{margin-top:12px;padding:10px 14px;border:1px solid #cfe3cf;background:#f6fbf6;border-radius:8px;font-size:17px;line-height:1.7}
+.tip{margin:10px 0 0;padding:8px 12px;border-left:4px solid var(--green);background:#f1f8f1;font-size:15px;line-height:1.6;display:none}
+.sol{margin-top:12px;padding:10px 14px;border:1px solid #cfe3cf;background:#f6fbf6;border-radius:8px;font-size:17px;line-height:1.8}
 .sol .big{font-size:22px;font-weight:700}
+.sol .sep{border-top:1px solid #cfe3cf;margin:6px 0}
+.sol .elc{vertical-align:bottom;line-height:1.1;gap:0}
 .win{text-align:center;padding:30px 10px}
 .win h2{color:var(--green);font-size:30px;margin:8px 0}
 sup,sub{font-size:.62em;line-height:0}
 .hidden{display:none!important}
-@media (max-width:560px){
-  .hs{font-size:11px}.hs .mid{font-size:13px}
-  .app{padding:10px 12px 16px;margin:0;border-radius:0}
-  .stage{grid-template-columns:30px 1fr 30px}
-  .cnt{font-size:22px}
-  .sums{margin:4px 36px 0}
-  .hl{font-size:20px}
-  .eqon{font-size:21px}
-  .status{grid-template-columns:1fr 1fr}
-  .msg{grid-column:1/3;grid-row:2}
-  .status .pts{text-align:right}
-}
 
-/* --- Level 1: Schalenmodell --- */
+/* Schalenmodell */
 .sch{margin:0 auto;max-width:640px}
+.sch.mini{max-width:430px;pointer-events:none;margin-bottom:8px}
 .sch svg{width:100%;height:auto;display:block;touch-action:manipulation}
 .sch .el{cursor:pointer}
 .sch .el:hover{filter:brightness(1.25)}
@@ -127,14 +108,14 @@ sup,sub{font-size:.62em;line-height:0}
 .atb .minus{background:#fff;border:1px solid #999;border-radius:6px;font:inherit;font-size:16px;padding:8px 12px;cursor:pointer}
 .ecount{text-align:center;font-size:15px;color:#555;margin-top:6px;min-height:20px}
 .schnote{text-align:center;font-size:13px;color:#777;margin:4px 0 0}
-.lad{display:grid;gap:12px;max-width:560px;margin:4px auto}
-.lad .ln{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-radius:8px;font-size:18px;font-weight:600}
-.lad .ln.d{background:var(--red-bg);border:1px solid #f0b8b8}
-.lad .ln.a{background:var(--blue-bg);border:1px solid #c3c5f3}
-.lad .ln.f{background:#f6f6f6;border:1px solid #ddd}
-.lad select{font:inherit;font-size:18px;padding:4px 8px;border:1.5px solid #888;border-radius:6px;background:#fff}
-.lad select.wrong{border-color:var(--bad);background:#fbeaea}
-.lad select.right{border-color:var(--ok);background:#eaf6ea}
+
+@media (max-width:560px){
+  .app{padding:10px 12px 16px;margin:0;border-radius:0}
+  .eqon{font-size:21px}
+  .status{grid-template-columns:1fr 1fr}
+  .msg{grid-column:1/3;grid-row:2}
+  .status .pts{text-align:right}
+}
 </style>
 </head>
 <body>
@@ -143,15 +124,16 @@ sup,sub{font-size:.62em;line-height:0}
   <div class="bar">
     <button class="tog hidden" id="restart">Neu starten</button>
     <button class="tog" id="tMode">Modus:<b id="vMode">Lernen</b></button>
-    <button class="tog" id="tLvl">Level:<b id="vLvl">1 Schalenmodell</b></button>
+    <button class="tog" id="tLvl">Stufe:<b id="vLvl">1 Schalenmodell</b></button>
   </div>
 
   <section class="intro" id="intro">
     <h1>Redoxreaktionen: Elektronen-Trainer</h1>
-    <p>Finde den Elektronendonator, verschiebe die Elektronen, stelle die Teilgleichungen auf und gleiche die Elektronen aus.</p>
+    <p>Finde den Elektronendonator, stelle die Teilgleichungen auf, multipliziere überkreuz, kürze und stelle die Gesamtgleichung auf.</p>
     <p>Abgegebene Elektronen = aufgenommene Elektronen!</p>
+    <p>Die Zahlen tippst du einfach in die Kästchen ein.</p>
     <p>Erreiche 1000 Punkte im Testmodus zum Gewinnen!</p>
-    <p class="legend">Level 1: Schalenmodell, Elektronen verschieben<br>Level 2: Teilgleichungen und Elektronenbilanz<br>Level 3: Metall + Metall-Ion (kommt noch)<br>Level 4: Oxidationszahlen (kommt noch)</p>
+    <p class="legend">Stufe 1: Schalenmodell, Metall + Nichtmetall<br>Stufe 2: Metall + Nichtmetall, auch Nebengruppenmetalle<br>Stufe 3: Metall + Metall-Ion und Metalloxide<br>Stufe 4: Oxidationszahlen</p>
     <button class="go" id="start">Spiel starten →</button>
   </section>
 
@@ -162,6 +144,7 @@ sup,sub{font-size:.62em;line-height:0}
       <span class="pts" id="pts"></span>
     </div>
     <div class="task" id="task"></div>
+    <div class="angabe hidden" id="info"></div>
     <div class="steps" id="steps"></div>
     <div id="work"></div>
     <div class="ctrl">
@@ -177,8 +160,25 @@ sup,sub{font-size:.62em;line-height:0}
 
 <script>
 "use strict";
-/* ============ Formel-Notation ============
-   "Fe2O3" → Indizes, "Cu^2+" → Ladung, "e" → e⁻ */
+/* ============ Hilfen ============ */
+const $ = id => document.getElementById(id);
+const gcd = (a,b) => b ? gcd(b, a % b) : a;
+const lcm = (a,b) => a * b / gcd(a,b);
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const ROM = ["0","I","II","III","IV","V","VI","VII"];
+const onTxt = n => n === 0 ? "0" : (n > 0 ? "+" : "−") + ROM[Math.abs(n)];
+const ON_OPTS = [-3,-2,-1,0,1,2,3,4,5,6];
+const spHTML = parts => parts.map(([el,n]) => el + (n > 1 ? "<sub>" + n + "</sub>" : "")).join("");
+const PRAISE = ["Klasse gemacht!","Richtig, stark!","Perfekt!","Sehr gut!","Genau so!"];
+const praise = () => PRAISE[Math.floor(Math.random() * PRAISE.length)];
+const E = "e<sup>−</sup>";
+const sub = n => n > 1 ? "<sub>" + n + "</sub>" : "";
+const co = n => n > 1 ? n + " " : "";
+const ionH = (el, q) => el + "<sup>" + (Math.abs(q) > 1 ? Math.abs(q) : "") + (q > 0 ? "+" : "−") + "</sup>";
+const onEl = (el, on) => '<span class="elc"><span class="onl">' + onTxt(on) + "</span><span>" + el + "</span></span>";
+const pl = (n, s, p) => n + " " + (n > 1 ? p : s);
+
+/* "Fe2O3" → Indizes, "Cu^2+" → Ladung */
 function fm(s){
   return s.replace(/\be\b/g, "e^-")
     .replace(/([A-Za-z\)])(\d+)/g, "$1<sub>$2</sub>")
@@ -186,74 +186,154 @@ function fm(s){
     .replace(/->/g, "→");
 }
 
-/* ============ Level 1: Schalenmodell ============
-   Kleine Hauptgruppen-Atome, damit alle Schalen zeichenbar sind. */
-const ATOM = {
-  Li:{z:3,  sh:[2,1],   n:"Lithium",   ion:"Lithium-Ion"},
-  Na:{z:11, sh:[2,8,1], n:"Natrium",   ion:"Natrium-Ion"},
-  Mg:{z:12, sh:[2,8,2], n:"Magnesium", ion:"Magnesium-Ion"},
-  Al:{z:13, sh:[2,8,3], n:"Aluminium", ion:"Aluminium-Ion"},
-  N: {z:7,  sh:[2,5],   n:"Stickstoff",ion:"Nitrid-Ion",  mol:"N2"},
-  O: {z:8,  sh:[2,6],   n:"Sauerstoff",ion:"Oxid-Ion",    mol:"O2"},
-  F: {z:9,  sh:[2,7],   n:"Fluor",     ion:"Fluorid-Ion", mol:"F2"},
-  S: {z:16, sh:[2,8,6], n:"Schwefel",  ion:"Sulfid-Ion"},
-  Cl:{z:17, sh:[2,8,7], n:"Chlor",     ion:"Chlorid-Ion", mol:"Cl2"}
-};
-const LS = [
-  ["Na","Cl","Natrium reagiert mit Chlor"],
-  ["Mg","O", "Magnesium reagiert mit Sauerstoff"],
-  ["Li","F", "Lithium reagiert mit Fluor"],
-  ["Na","O", "Natrium reagiert mit Sauerstoff"],
-  ["Mg","F", "Magnesium reagiert mit Fluor"],
-  ["Al","F", "Aluminium reagiert mit Fluor"],
-  ["Li","N", "Lithium reagiert mit Stickstoff"],
-  ["Na","S", "Natrium reagiert mit Schwefel"],
-  ["Mg","Cl","Magnesium reagiert mit Chlor"],
-  ["Li","O", "Lithium reagiert mit Sauerstoff"],
-  ["Al","O", "Aluminium reagiert mit Sauerstoff"],
-  ["Mg","N", "Magnesium reagiert mit Stickstoff"]
-].map(([d,a,t]) => ({t, d, a, dn: ATOM[d].n + "-Atom", an: ATOM[a].n + "-Atom"}));
+/* ============ Eingabefelder ============
+   inp(Wert, Art): Art c = Koeffizient, e = Elektronenzahl, q = Ladungszahl, i = Index.
+   Im Lösungsmodus (CLEAN) wird statt des Feldes die fertige Schreibweise ausgegeben. */
+let F = [], CLEAN = false;
+function inp(v, k){
+  if (CLEAN) return (k === "c" || k === "e") ? co(v) : (v > 1 ? String(v) : "");
+  F.push(v);
+  const lab = {c:"Koeffizient", e:"Anzahl Elektronen", q:"Ladungszahl", i:"Index"}[k];
+  return '<input class="num" type="text" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="' + lab + '">' + (k === "c" || k === "e" ? " " : "");
+}
+const up = h => '<span class="up">' + h + "</span>";
+const dn = h => '<span class="dn">' + h + "</span>";
 
-/* ============ Level 2: Metall + Nichtmetall (Hauptgruppen) ============
-   d = Donator, a = Akzeptor (Formeleinheit), ox/red = [links, rechts, Elektronen],
-   de/ae = Elektronen je Formeleinheit, eq = Gesamtgleichung */
+/* ============ Elemente ============ */
+const EL = {
+  Li:{n:"Lithium",   z:3,  sh:[2,1]},   Na:{n:"Natrium",  z:11, sh:[2,8,1]}, K:{n:"Kalium", z:19, sh:[2,8,8,1]},
+  Mg:{n:"Magnesium", z:12, sh:[2,8,2]}, Ca:{n:"Calcium",  z:20, sh:[2,8,8,2]}, Al:{n:"Aluminium", z:13, sh:[2,8,3]},
+  N: {n:"Stickstoff",z:7,  sh:[2,5]},   O: {n:"Sauerstoff", z:8, sh:[2,6]}, F:{n:"Fluor", z:9, sh:[2,7]},
+  Cl:{n:"Chlor",     z:17, sh:[2,8,7]}, Br:{n:"Brom"}, I:{n:"Iod"}, S:{n:"Schwefel"}, P:{n:"Phosphor"},
+  Zn:{n:"Zink"}, Cu:{n:"Kupfer"}, Fe:{n:"Eisen"}, Ag:{n:"Silber"}, Pb:{n:"Blei"}, Sn:{n:"Zinn"}, Cr:{n:"Chrom"}
+};
+const QM  = {Li:1, Na:1, K:1, Mg:2, Ca:2, Al:3};             // Ladung der Hauptgruppen-Metall-Ionen
+const QN  = {N:3, O:2, F:1, Cl:1, Br:1, I:1, S:2, P:3};       // Ladung der Nichtmetall-Ionen (negativ)
+const MOL = {N:1, O:1, F:1, Cl:1, Br:1, I:1};                 // liegen als zweiatomige Moleküle vor
+const NG  = {Zn:1, Cu:1, Fe:1, Ag:1, Pb:1, Sn:1, Cr:1};       // Nebengruppe: Ladung wird angegeben
+const ngInfo = (m, q) => NG[m] ? "Angabe: " + EL[m].n + " bildet hier " + m + "(" + ROM[q] + ")-Ionen." : "";
+const SNOTE = "Schwefel wird hier vereinfacht als einzelnes Atom geschrieben.";
+
+/* ============ Stufe 1 und 2: Metall + Nichtmetall ============ */
+function salt(t, m, x, note, qNG){
+  const k = MOL[x] ? 2 : 1, q = qNG || QM[m], r = QN[x];
+  const de = q, ae = k * r, L = lcm(de, ae), nd = L / de, na = L / ae;
+  const g = gcd(q, r), ix = r / g, iy = q / g;
+  return {t, typ:"salt", d:m, x, k, q, r, de, ae, sol:[nd, na], ix, iy, c: nd / ix, note, info: ngInfo(m, q),
+    dHTML:m, aHTML: x + (k > 1 ? "<sub>2</sub>" : ""),
+    dn: EL[m].n + "-Atom", an: EL[x].n + (k > 1 ? "-Molekül" : "-Atom"),
+    saltH: m + sub(ix) + x + sub(iy)};
+}
 const L1 = [
- {t:"Aluminium reagiert mit Iod (unser Versuch)", d:"Al", dn:"Aluminium-Atom", a:"I2", an:"Iod-Molekül", ox:["Al","Al^3+",3], red:["I2","2 I^-",2], de:3, ae:2, eq:"2 Al + 3 I2 -> 2 AlI3"},
- {t:"Kalium reagiert mit Sauerstoff", d:"K", dn:"Kalium-Atom", a:"O2", an:"Sauerstoff-Molekül", ox:["K","K^+",1], red:["O2","2 O^2-",4], de:1, ae:4, eq:"4 K + O2 -> 2 K2O"},
- {t:"Magnesium reagiert mit Phosphor", d:"Mg", dn:"Magnesium-Atom", a:"P", an:"Phosphor-Atom", ox:["Mg","Mg^2+",2], red:["P","P^3-",3], de:2, ae:3, eq:"3 Mg + 2 P -> Mg3P2", note:"Phosphor wird hier vereinfacht als einzelnes Atom geschrieben."},
- {t:"Calcium reagiert mit Chlor", d:"Ca", dn:"Calcium-Atom", a:"Cl2", an:"Chlor-Molekül", ox:["Ca","Ca^2+",2], red:["Cl2","2 Cl^-",2], de:2, ae:2, eq:"Ca + Cl2 -> CaCl2"},
- {t:"Natrium reagiert mit Schwefel", d:"Na", dn:"Natrium-Atom", a:"S", an:"Schwefel-Atom", ox:["Na","Na^+",1], red:["S","S^2-",2], de:1, ae:2, eq:"2 Na + S -> Na2S", note:"Schwefel wird hier vereinfacht als einzelnes Atom geschrieben."},
- {t:"Aluminium reagiert mit Brom", d:"Al", dn:"Aluminium-Atom", a:"Br2", an:"Brom-Molekül", ox:["Al","Al^3+",3], red:["Br2","2 Br^-",2], de:3, ae:2, eq:"2 Al + 3 Br2 -> 2 AlBr3"},
- {t:"Lithium reagiert mit Stickstoff", d:"Li", dn:"Lithium-Atom", a:"N2", an:"Stickstoff-Molekül", ox:["Li","Li^+",1], red:["N2","2 N^3-",6], de:1, ae:6, eq:"6 Li + N2 -> 2 Li3N"},
- {t:"Magnesium verbrennt an der Luft", d:"Mg", dn:"Magnesium-Atom", a:"O2", an:"Sauerstoff-Molekül", ox:["Mg","Mg^2+",2], red:["O2","2 O^2-",4], de:2, ae:4, eq:"2 Mg + O2 -> 2 MgO"},
- {t:"Natrium reagiert mit Chlor", d:"Na", dn:"Natrium-Atom", a:"Cl2", an:"Chlor-Molekül", ox:["Na","Na^+",1], red:["Cl2","2 Cl^-",2], de:1, ae:2, eq:"2 Na + Cl2 -> 2 NaCl"},
- {t:"Aluminiumpulver verbrennt", d:"Al", dn:"Aluminium-Atom", a:"O2", an:"Sauerstoff-Molekül", ox:["Al","Al^3+",3], red:["O2","2 O^2-",4], de:3, ae:4, eq:"4 Al + 3 O2 -> 2 Al2O3"},
- {t:"Calcium reagiert mit Sauerstoff", d:"Ca", dn:"Calcium-Atom", a:"O2", an:"Sauerstoff-Molekül", ox:["Ca","Ca^2+",2], red:["O2","2 O^2-",4], de:2, ae:4, eq:"2 Ca + O2 -> 2 CaO"},
- {t:"Aluminium reagiert mit Chlor", d:"Al", dn:"Aluminium-Atom", a:"Cl2", an:"Chlor-Molekül", ox:["Al","Al^3+",3], red:["Cl2","2 Cl^-",2], de:3, ae:2, eq:"2 Al + 3 Cl2 -> 2 AlCl3"},
- {t:"Lithium reagiert mit Sauerstoff", d:"Li", dn:"Lithium-Atom", a:"O2", an:"Sauerstoff-Molekül", ox:["Li","Li^+",1], red:["O2","2 O^2-",4], de:1, ae:4, eq:"4 Li + O2 -> 2 Li2O"},
- {t:"Kalium reagiert mit Brom", d:"K", dn:"Kalium-Atom", a:"Br2", an:"Brom-Molekül", ox:["K","K^+",1], red:["Br2","2 Br^-",2], de:1, ae:2, eq:"2 K + Br2 -> 2 KBr"},
- {t:"Magnesium reagiert mit Chlor", d:"Mg", dn:"Magnesium-Atom", a:"Cl2", an:"Chlor-Molekül", ox:["Mg","Mg^2+",2], red:["Cl2","2 Cl^-",2], de:2, ae:2, eq:"Mg + Cl2 -> MgCl2"},
- {t:"Magnesium reagiert mit Stickstoff", d:"Mg", dn:"Magnesium-Atom", a:"N2", an:"Stickstoff-Molekül", ox:["Mg","Mg^2+",2], red:["N2","2 N^3-",6], de:2, ae:6, eq:"3 Mg + N2 -> Mg3N2"},
- {t:"Natrium reagiert mit Sauerstoff", d:"Na", dn:"Natrium-Atom", a:"O2", an:"Sauerstoff-Molekül", ox:["Na","Na^+",1], red:["O2","2 O^2-",4], de:1, ae:4, eq:"4 Na + O2 -> 2 Na2O"}
-];
-/* ============ Level 3: Metall + Metall-Ion / Metalloxid (kommt noch) ============ */
+  ["Natrium reagiert mit Chlor","Na","Cl"],
+  ["Magnesium reagiert mit Sauerstoff","Mg","O"],
+  ["Lithium reagiert mit Fluor","Li","F"],
+  ["Natrium reagiert mit Sauerstoff","Na","O"],
+  ["Magnesium reagiert mit Fluor","Mg","F"],
+  ["Aluminium reagiert mit Fluor","Al","F"],
+  ["Lithium reagiert mit Stickstoff","Li","N"],
+  ["Magnesium reagiert mit Chlor","Mg","Cl"],
+  ["Lithium reagiert mit Sauerstoff","Li","O"],
+  ["Aluminium reagiert mit Sauerstoff","Al","O"],
+  ["Magnesium reagiert mit Stickstoff","Mg","N"],
+  ["Aluminium reagiert mit Chlor","Al","Cl"],
+  ["Natrium reagiert mit Fluor","Na","F"],
+  ["Lithium reagiert mit Chlor","Li","Cl"],
+  ["Kalium reagiert mit Chlor","K","Cl"],
+  ["Kalium reagiert mit Sauerstoff","K","O"],
+  ["Calcium reagiert mit Sauerstoff","Ca","O"],
+  ["Calcium reagiert mit Chlor","Ca","Cl"],
+  ["Calcium reagiert mit Stickstoff","Ca","N"],
+  ["Aluminium reagiert mit Stickstoff","Al","N"]
+].map(([t,m,x]) => Object.assign(salt(t, m, x), {s1:true}));
+
 const L2 = [
- {t:"Zinkblech in Kupfer(II)-sulfat-Lösung", d:"Zn", dn:"Zink-Atom", a:"Cu^2+", an:"Kupfer(II)-Ion", ox:["Zn","Zn^2+",2], red:["Cu^2+","Cu",2], de:2, ae:2, eq:"Zn + Cu^2+ -> Zn^2+ + Cu"},
- {t:"Kupferdraht in Silbernitrat-Lösung", d:"Cu", dn:"Kupfer-Atom", a:"Ag^+", an:"Silber-Ion", ox:["Cu","Cu^2+",2], red:["Ag^+","Ag",1], de:2, ae:1, eq:"Cu + 2 Ag^+ -> Cu^2+ + 2 Ag"},
- {t:"Eisennagel in Kupfer(II)-sulfat-Lösung", d:"Fe", dn:"Eisen-Atom", a:"Cu^2+", an:"Kupfer(II)-Ion", ox:["Fe","Fe^2+",2], red:["Cu^2+","Cu",2], de:2, ae:2, eq:"Fe + Cu^2+ -> Fe^2+ + Cu"},
- {t:"Aluminiumfolie in Kupfer(II)-chlorid-Lösung", d:"Al", dn:"Aluminium-Atom", a:"Cu^2+", an:"Kupfer(II)-Ion", ox:["Al","Al^3+",3], red:["Cu^2+","Cu",2], de:3, ae:2, eq:"2 Al + 3 Cu^2+ -> 2 Al^3+ + 3 Cu"},
- {t:"Magnesiumband in Silbernitrat-Lösung", d:"Mg", dn:"Magnesium-Atom", a:"Ag^+", an:"Silber-Ion", ox:["Mg","Mg^2+",2], red:["Ag^+","Ag",1], de:2, ae:1, eq:"Mg + 2 Ag^+ -> Mg^2+ + 2 Ag"},
- {t:"Zinkblech in Blei(II)-nitrat-Lösung", d:"Zn", dn:"Zink-Atom", a:"Pb^2+", an:"Blei(II)-Ion", ox:["Zn","Zn^2+",2], red:["Pb^2+","Pb",2], de:2, ae:2, eq:"Zn + Pb^2+ -> Zn^2+ + Pb"},
- {t:"Eisennagel in Silbernitrat-Lösung", d:"Fe", dn:"Eisen-Atom", a:"Ag^+", an:"Silber-Ion", ox:["Fe","Fe^2+",2], red:["Ag^+","Ag",1], de:2, ae:1, eq:"Fe + 2 Ag^+ -> Fe^2+ + 2 Ag"},
- {t:"Thermit-Verfahren: Aluminium + Eisen(III)-oxid", d:"Al", dn:"Aluminium-Atom", a:"Fe2O3", an:"Eisen(III)-oxid", ox:["Al","Al^3+",3], red:["Fe^3+","Fe",3], de:3, ae:6, eq:"2 Al + Fe2O3 -> Al2O3 + 2 Fe", note:"Fe2O3 enthält 2 Fe^3+-Ionen → nimmt 2 · 3 = 6 e auf."},
- {t:"Magnesium + Kupfer(II)-oxid", d:"Mg", dn:"Magnesium-Atom", a:"CuO", an:"Kupfer(II)-oxid", ox:["Mg","Mg^2+",2], red:["Cu^2+","Cu",2], de:2, ae:2, eq:"Mg + CuO -> MgO + Cu", note:"CuO enthält 1 Cu^2+-Ion → nimmt 2 e auf."},
- {t:"Aluminium + Kupfer(II)-oxid", d:"Al", dn:"Aluminium-Atom", a:"CuO", an:"Kupfer(II)-oxid", ox:["Al","Al^3+",3], red:["Cu^2+","Cu",2], de:3, ae:2, eq:"2 Al + 3 CuO -> Al2O3 + 3 Cu", note:"CuO enthält 1 Cu^2+-Ion → nimmt 2 e auf."},
- {t:"Zink + Kupfer(II)-oxid", d:"Zn", dn:"Zink-Atom", a:"CuO", an:"Kupfer(II)-oxid", ox:["Zn","Zn^2+",2], red:["Cu^2+","Cu",2], de:2, ae:2, eq:"Zn + CuO -> ZnO + Cu", note:"CuO enthält 1 Cu^2+-Ion → nimmt 2 e auf."},
- {t:"Magnesium + Eisen(III)-oxid", d:"Mg", dn:"Magnesium-Atom", a:"Fe2O3", an:"Eisen(III)-oxid", ox:["Mg","Mg^2+",2], red:["Fe^3+","Fe",3], de:2, ae:6, eq:"3 Mg + Fe2O3 -> 3 MgO + 2 Fe", note:"Fe2O3 enthält 2 Fe^3+-Ionen → nimmt 2 · 3 = 6 e auf."}
-];
-/* ============ Level 4: Oxidationszahlen (kommt noch) ============
-   sp = [Koeffizient, Rolle (d/a/""), Seite (0 Edukt / 1 Produkt), [[Element, Anzahl, Oxidationszahl], …]] */
+  ["Aluminium reagiert mit Iod (unser Versuch)","Al","I"],
+  ["Kalium reagiert mit Sauerstoff","K","O"],
+  ["Magnesium reagiert mit Phosphor","Mg","P","Phosphor wird hier vereinfacht als einzelnes Atom geschrieben."],
+  ["Calcium reagiert mit Chlor","Ca","Cl"],
+  ["Natrium reagiert mit Schwefel","Na","S",SNOTE],
+  ["Aluminium reagiert mit Brom","Al","Br"],
+  ["Lithium reagiert mit Stickstoff","Li","N"],
+  ["Magnesium verbrennt an der Luft","Mg","O"],
+  ["Natrium reagiert mit Chlor","Na","Cl"],
+  ["Aluminiumpulver verbrennt","Al","O"],
+  ["Calcium reagiert mit Sauerstoff","Ca","O"],
+  ["Aluminium reagiert mit Chlor","Al","Cl"],
+  ["Lithium reagiert mit Sauerstoff","Li","O"],
+  ["Kalium reagiert mit Brom","K","Br"],
+  ["Magnesium reagiert mit Chlor","Mg","Cl"],
+  ["Magnesium reagiert mit Stickstoff","Mg","N"],
+  ["Natrium reagiert mit Sauerstoff","Na","O"],
+  ["Natrium reagiert mit Iod","Na","I"],
+  ["Calcium reagiert mit Brom","Ca","Br"],
+  ["Aluminium reagiert mit Schwefel","Al","S",SNOTE],
+  // Nebengruppenmetalle: Ladung wird angegeben
+  ["Zink reagiert mit Iod","Zn","I",null,2],
+  ["Eisen reagiert mit Schwefel","Fe","S",SNOTE,2],
+  ["Kupfer reagiert mit Schwefel","Cu","S",SNOTE,1],
+  ["Zink reagiert mit Schwefel","Zn","S",SNOTE,2],
+  ["Kupferblech wird an der Luft erhitzt","Cu","O",null,2],
+  ["Eisenwolle verbrennt in Chlor","Fe","Cl",null,3],
+  ["Kupfer reagiert mit Chlor","Cu","Cl",null,2],
+  ["Silber reagiert mit Schwefel (Silber läuft an)","Ag","S",SNOTE,1],
+  ["Zinkpulver verbrennt","Zn","O",null,2],
+  ["Eisen reagiert mit Brom","Fe","Br",null,3]
+].map(([t,m,x,n,q]) => salt(t, m, x, n || undefined, q));
+
+/* ============ Stufe 3: Metall + Metall-Ion, Metall + Metalloxid ============ */
+function mion(t, m, q, a, r, an){
+  const de = q, ae = r, L = lcm(de, ae), nd = L / de, na = L / ae;
+  return {t, typ:"mion", d:m, q, a, r, de, ae, sol:[nd, na], dHTML:m, aHTML:ionH(a, r),
+    dn: EL[m].n + "-Atom", an, info: ngInfo(m, q),
+    gl:[[[nd, m], [na, ionH(a, r)]], [[nd, ionH(m, q)], [na, a]]]};
+}
+/* b = Anzahl der Metall-Ionen je Formeleinheit des Oxids, gl = Koeffizienten der Gesamtgleichung */
+function oxid(t, m, q, a, r, b, oxF, an, gl){
+  const de = q, ae = b * r, L = lcm(de, ae), nd = L / de, na = L / ae;
+  return {t, typ:"oxid", d:m, q, a, r, b, oxF, de, ae, sol:[nd, na], dHTML:m, aHTML:fm(oxF),
+    dn: EL[m].n + "-Atom", an, info: ngInfo(m, q),
+    gl: gl.map(side => side.map(([c, f]) => [c, fm(f)]))};
+}
 const L3 = [
+  mion("Zinkblech in Kupfer(II)-sulfat-Lösung",       "Zn",2, "Cu",2, "Kupfer(II)-Ion"),
+  mion("Kupferdraht in Silbernitrat-Lösung",          "Cu",2, "Ag",1, "Silber-Ion"),
+  mion("Eisennagel in Kupfer(II)-sulfat-Lösung",      "Fe",2, "Cu",2, "Kupfer(II)-Ion"),
+  mion("Aluminiumfolie in Kupfer(II)-chlorid-Lösung", "Al",3, "Cu",2, "Kupfer(II)-Ion"),
+  mion("Magnesiumband in Silbernitrat-Lösung",        "Mg",2, "Ag",1, "Silber-Ion"),
+  mion("Zinkblech in Blei(II)-nitrat-Lösung",         "Zn",2, "Pb",2, "Blei(II)-Ion"),
+  mion("Eisennagel in Silbernitrat-Lösung",           "Fe",2, "Ag",1, "Silber-Ion"),
+  mion("Zinkblech in Silbernitrat-Lösung",            "Zn",2, "Ag",1, "Silber-Ion"),
+  mion("Magnesiumband in Kupfer(II)-sulfat-Lösung",   "Mg",2, "Cu",2, "Kupfer(II)-Ion"),
+  mion("Magnesiumband in Zinksulfat-Lösung",          "Mg",2, "Zn",2, "Zink-Ion"),
+  mion("Aluminiumfolie in Silbernitrat-Lösung",       "Al",3, "Ag",1, "Silber-Ion"),
+  mion("Zinkblech in Zinn(II)-chlorid-Lösung",        "Zn",2, "Sn",2, "Zinn(II)-Ion"),
+  mion("Eisennagel in Blei(II)-nitrat-Lösung",        "Fe",2, "Pb",2, "Blei(II)-Ion"),
+  oxid("Thermit-Verfahren: Aluminium + Eisen(III)-oxid", "Al",3, "Fe",3, 2, "Fe2O3", "Eisen(III)-oxid",
+       [[[2,"Al"],[1,"Fe2O3"]], [[1,"Al2O3"],[2,"Fe"]]]),
+  oxid("Magnesium + Kupfer(II)-oxid",  "Mg",2, "Cu",2, 1, "CuO", "Kupfer(II)-oxid",
+       [[[1,"Mg"],[1,"CuO"]], [[1,"MgO"],[1,"Cu"]]]),
+  oxid("Aluminium + Kupfer(II)-oxid",  "Al",3, "Cu",2, 1, "CuO", "Kupfer(II)-oxid",
+       [[[2,"Al"],[3,"CuO"]], [[1,"Al2O3"],[3,"Cu"]]]),
+  oxid("Zink + Kupfer(II)-oxid",       "Zn",2, "Cu",2, 1, "CuO", "Kupfer(II)-oxid",
+       [[[1,"Zn"],[1,"CuO"]], [[1,"ZnO"],[1,"Cu"]]]),
+  oxid("Magnesium + Eisen(III)-oxid",  "Mg",2, "Fe",3, 2, "Fe2O3", "Eisen(III)-oxid",
+       [[[3,"Mg"],[1,"Fe2O3"]], [[3,"MgO"],[2,"Fe"]]]),
+  oxid("Chrom-Gewinnung: Aluminium + Chrom(III)-oxid", "Al",3, "Cr",3, 2, "Cr2O3", "Chrom(III)-oxid",
+       [[[2,"Al"],[1,"Cr2O3"]], [[1,"Al2O3"],[2,"Cr"]]]),
+  oxid("Magnesium + Zinkoxid",         "Mg",2, "Zn",2, 1, "ZnO", "Zinkoxid",
+       [[[1,"Mg"],[1,"ZnO"]], [[1,"MgO"],[1,"Zn"]]]),
+  oxid("Aluminium + Zinkoxid",         "Al",3, "Zn",2, 1, "ZnO", "Zinkoxid",
+       [[[2,"Al"],[3,"ZnO"]], [[1,"Al2O3"],[3,"Zn"]]]),
+  oxid("Zink + Blei(II)-oxid",         "Zn",2, "Pb",2, 1, "PbO", "Blei(II)-oxid",
+       [[[1,"Zn"],[1,"PbO"]], [[1,"ZnO"],[1,"Pb"]]]),
+  oxid("Magnesium + Silberoxid",       "Mg",2, "Ag",1, 2, "Ag2O", "Silberoxid",
+       [[[1,"Mg"],[1,"Ag2O"]], [[1,"MgO"],[2,"Ag"]]])
+];
+
+/* ============ Stufe 4: Oxidationszahlen ============
+   sp = [Koeffizient, Rolle (d/a/""), Seite (0 Edukt / 1 Produkt), [[Element, Anzahl, Oxidationszahl], …]] */
+const L4 = [
  {t:"Kupfer(II)-oxid wird mit Wasserstoff reduziert", de:2, ae:2, sp:[
    [1,"a",0,[["Cu",1,2],["O",1,-2]]],[1,"d",0,[["H",2,0]]],[1,"",1,[["Cu",1,0]]],[1,"",1,[["H",2,1],["O",1,-2]]]]},
  {t:"Hochofen: Eisen(III)-oxid + Kohlenstoffmonooxid", de:2, ae:6, sp:[
@@ -276,71 +356,53 @@ const L3 = [
    [1,"a",0,[["Cu",1,2],["O",1,-2]]],[1,"d",0,[["C",1,2],["O",1,-2]]],[1,"",1,[["Cu",1,0]]],[1,"",1,[["C",1,4],["O",2,-2]]]]},
  {t:"Blei(II)-oxid wird mit Kohlenstoff reduziert", de:4, ae:2, sp:[
    [2,"a",0,[["Pb",1,2],["O",1,-2]]],[1,"d",0,[["C",1,0]]],[2,"",1,[["Pb",1,0]]],[1,"",1,[["C",1,4],["O",2,-2]]]]},
+ {t:"Eisen(III)-oxid wird mit Wasserstoff reduziert", de:2, ae:6, sp:[
+   [1,"a",0,[["Fe",2,3],["O",3,-2]]],[3,"d",0,[["H",2,0]]],[2,"",1,[["Fe",1,0]]],[3,"",1,[["H",2,1],["O",1,-2]]]]},
+ {t:"Zinkoxid wird mit Kohlenstoff reduziert", de:4, ae:2, sp:[
+   [2,"a",0,[["Zn",1,2],["O",1,-2]]],[1,"d",0,[["C",1,0]]],[2,"",1,[["Zn",1,0]]],[1,"",1,[["C",1,4],["O",2,-2]]]]},
+ {t:"Blei(II)-oxid wird mit Wasserstoff reduziert", de:2, ae:2, sp:[
+   [1,"a",0,[["Pb",1,2],["O",1,-2]]],[1,"d",0,[["H",2,0]]],[1,"",1,[["Pb",1,0]]],[1,"",1,[["H",2,1],["O",1,-2]]]]},
+ {t:"Zinn-Gewinnung: Zinn(IV)-oxid + Kohlenstoff", de:4, ae:4, sp:[
+   [1,"a",0,[["Sn",1,4],["O",2,-2]]],[1,"d",0,[["C",1,0]]],[1,"",1,[["Sn",1,0]]],[1,"",1,[["C",1,4],["O",2,-2]]]]},
+ {t:"Natrium reagiert mit Chlor", de:1, ae:2, sp:[
+   [2,"d",0,[["Na",1,0]]],[1,"a",0,[["Cl",2,0]]],[2,"",1,[["Na",1,1],["Cl",1,-1]]]]},
  {t:"Aluminium reagiert mit Chlor", de:3, ae:2, sp:[
    [2,"d",0,[["Al",1,0]]],[3,"a",0,[["Cl",2,0]]],[2,"",1,[["Al",1,3],["Cl",3,-1]]]]}
 ];
-
-/* ============ Hilfen ============ */
-const $ = id => document.getElementById(id);
-const gcd = (a,b) => b ? gcd(b, a % b) : a;
-const lcm = (a,b) => a * b / gcd(a,b);
-const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-const ROM = ["0","I","II","III","IV","V","VI","VII"];
-const onTxt = n => n === 0 ? "0" : (n > 0 ? "+" : "−") + ROM[Math.abs(n)];
-const ON_OPTS = [-3,-2,-1,0,1,2,3,4,5,6];
-const spHTML = parts => parts.map(([el,n]) => el + (n > 1 ? "<sub>" + n + "</sub>" : "")).join("");
-const PRAISE = ["Klasse gemacht!","Richtig, stark!","Perfekt!","Sehr gut!","Genau so!"];
-const praise = () => PRAISE[Math.floor(Math.random() * PRAISE.length)];
-const SUPD = {"1":"","2":"²","3":"³"};
-const ionTxt = (el, q) => el + SUPD[Math.abs(q)] + (q > 0 ? "⁺" : "⁻");
-const ionHTML = (el, q) => el + "<sup>" + (Math.abs(q) > 1 ? Math.abs(q) : "") + (q > 0 ? "+" : "−") + "</sup>";
-const formHTML = (d, nd, a, na) => d + (nd > 1 ? "<sub>" + nd + "</sub>" : "") + a + (na > 1 ? "<sub>" + na + "</sub>" : "");
-const SUBD = n => String(n).split("").map(c => "₀₁₂₃₄₅₆₇₈₉"[+c]).join("");
-const formTxt = (d, nd, a, na) => d + (nd > 1 ? SUBD(nd) : "") + a + (na > 1 ? SUBD(na) : "");
-
-// Level 1: Kennzahlen berechnen
-LS.forEach(t => {
-  t.vd = ATOM[t.d].sh.at(-1);          // abgegebene e⁻ je Metall-Atom
-  t.va = ATOM[t.a].sh.at(-1);          // eigene Außenelektronen Nichtmetall
-  t.need = 8 - t.va;                   // aufgenommene e⁻ je Nichtmetall-Atom
-  const m = lcm(t.vd, t.need); t.sol = [m / t.vd, m / t.need];
-  t.dHTML = t.d; t.aHTML = t.a;
-});
-// Level 4 in einheitliches Format bringen
-L3.forEach(t => {
+L4.forEach(t => {
+  t.typ = "oz";
   const ed = t.sp.filter(s => s[2] === 0), pr = t.sp.filter(s => s[2] === 1);
   const dS = ed.find(s => s[1] === "d"), aS = ed.find(s => s[1] === "a");
   t.dHTML = spHTML(dS[3]); t.aHTML = spHTML(aS[3]);
   t.sol = [dS[0], aS[0]];
-  const side = arr => arr.map(s => (s[0] > 1 ? s[0] + " " : "") + spHTML(s[3])).join(" + ");
-  t.eqHTML = side(ed) + " → " + side(pr);
   t.bare = ed.map(s => spHTML(s[3])).join(" + ") + " → " + pr.map(s => spHTML(s[3])).join(" + ");
-  const change = S0 => { for (const [el,,on] of S0[3]) for (const p of pr) for (const [el2,,on2] of p[3]) if (el2 === el && on2 !== on) return {el, from:on, to:on2}; };
+  const change = S0 => {
+    for (const [el, n, on] of S0[3]) for (const p of pr) for (const [el2,,on2] of p[3])
+      if (el2 === el && on2 !== on) return {el, n, from:on, to:on2};
+  };
   t.dCh = change(dS); t.aCh = change(aS);
+  t.gl = [ed.map(s => [s[0], spHTML(s[3])]), pr.map(s => [s[0], spHTML(s[3])])];
 });
-[L1, L2].forEach(L => L.forEach(t => {
-  const m = lcm(t.de, t.ae); t.sol = [m / t.de, m / t.ae];
-  t.dHTML = fm(t.d); t.aHTML = fm(t.a); t.eqHTML = fm(t.eq);
-}));
 
-/* ============ Level-Übersicht ============ */
-const STD_STEPS = ["Donator & Akzeptor","Teilgleichungen","Elektronenbilanz"];
+/* ============ Stufen ============ */
+const N = {dona:"Donator & Akzeptor", sch:"Elektronen verschieben", teil:"Teilgleichungen", kreuz:"Überkreuz multiplizieren",
+           gesamt:"Gesamtgleichung", oz:"Oxidationszahlen", rm:"Reduktionsmittel"};
 const LEVELS = [
-  {typ:"sch", name:"1 Schalenmodell",         data:LS, steps:["Donator & Akzeptor","Elektronen verschieben","Ladungen & Formel"]},
-  {typ:"std", name:"2 Metall + Nichtmetall",  data:L1, steps:STD_STEPS},
-  {typ:"std", name:"3 Metall + Metall-Ion",   data:L2, steps:STD_STEPS},
-  {typ:"oz",  name:"4 Oxidationszahlen",      data:L3, steps:["Oxidationszahlen","Reduktionsmittel","Elektronenbilanz"]}
+  {name:"1 Schalenmodell",             data:L1, ph:["dona","sch","teil","kreuz","gesamt"]},
+  {name:"2 Metall + Nichtmetall",      data:L2, ph:["dona","teil","kreuz","gesamt"]},
+  {name:"3 Metall + Metall-Ion/Oxid",  data:L3, ph:["dona","teil","kreuz","gesamt"]},
+  {name:"4 Oxidationszahlen",          data:L4, ph:["oz","rm","teil","kreuz","gesamt"]}
 ];
 
 /* ============ Zustand ============ */
 const S = {mode:"Lernen", lvl:1, nr:0, pts:0, solved:0, err:0, t:null, phase:0, tries:0, tips:0, done:false,
-           deck:[], box:{d:0, a:0}, e:[0,0], at:[], phaseDone:false};
-const GOAL = 1000, PHASE_PTS = [30, 30, 40], MAXE = 24, MAXAT = 4;
+           deck:[], D:[], A:[], F:[], phaseDone:false};
+const GOAL = 1000, MAXD = 6, MAXU = 3;
 const learn = () => S.mode === "Lernen";
 const LV = () => LEVELS[S.lvl - 1];
-const isSch = () => LV().typ === "sch";
-const isOZ  = () => LV().typ === "oz";
-const isStd = () => LV().typ === "std";
+const PH = () => LV().ph[S.phase];
+const isLast = () => S.phase === LV().ph.length - 1;
+const phasePts = () => Math.round(100 / LV().ph.length);
 
 function buildDeck(){ S.deck = shuffle([...LV().data]); }
 
@@ -349,65 +411,145 @@ function newTask(){
   S.t = S.deck.pop(); S.nr++; S.phase = 0; S.done = false;
   $("nr").textContent = "Reaktion " + S.nr;
   $("task").textContent = S.t.t;
+  $("info").textContent = S.t.info || "";
+  $("info").classList.toggle("hidden", !S.t.info);
   $("solbox").innerHTML = "";
   startPhase();
 }
 
+/* ============ Bausteine der Gleichungen ============ */
+function teil(t){
+  if (t.typ === "salt") return [
+    t.d + " → " + t.d + up(inp(t.q, "q") + "+") + " + " + inp(t.de, "e") + E,
+    t.aHTML + " + " + inp(t.ae, "e") + E + " → " + inp(t.k, "c") + t.x + up(inp(t.r, "q") + "−")];
+  if (t.typ === "mion") return [
+    t.d + " → " + t.d + up(inp(t.q, "q") + "+") + " + " + inp(t.de, "e") + E,
+    ionH(t.a, t.r) + " + " + inp(t.ae, "e") + E + " → " + t.a];
+  if (t.typ === "oxid") return [
+    t.d + " → " + t.d + up(inp(t.q, "q") + "+") + " + " + inp(t.de, "e") + E,
+    inp(t.b, "c") + ionH(t.a, t.r) + " + " + inp(t.ae, "e") + E + " → " + inp(t.b, "c") + t.a];
+  const d = t.dCh, a = t.aCh;   // Oxidationszahlen
+  return [
+    inp(d.n, "c") + onEl(d.el, d.from) + " → " + inp(d.n, "c") + onEl(d.el, d.to) + " + " + inp(t.de, "e") + E,
+    inp(a.n, "c") + onEl(a.el, a.from) + " + " + inp(t.ae, "e") + E + " → " + inp(a.n, "c") + onEl(a.el, a.to)];
+}
+function teilLab(t){
+  if (t.typ === "oxid") return ["Oxidation (Elektronenabgabe)", "Reduktion (Elektronenaufnahme): " + EL[t.a].n + "-Ionen aus " + t.aHTML];
+  if (t.typ === "oz")   return ["Oxidation (Elektronenabgabe) bei " + t.dHTML, "Reduktion (Elektronenaufnahme) bei " + t.aHTML];
+  return ["Oxidation (Elektronenabgabe)", "Reduktion (Elektronenaufnahme)"];
+}
+function side(list){ return list.map(([c, h]) => inp(c, "c") + h).join(" + "); }
+function gesamt(t){
+  if (t.typ === "salt") {
+    const [nd, na] = t.sol;
+    const lines = [["Gesamtgleichung mit Ionen",
+      inp(nd, "c") + t.d + " + " + inp(na, "c") + t.aHTML + " → " + inp(nd, "c") + ionH(t.d, t.q) + " + " + inp(na * t.k, "c") + ionH(t.x, -t.r)]];
+    if (t.s1) lines.push(["Verhältnisformel des Salzes", t.d + dn(inp(t.ix, "i")) + t.x + dn(inp(t.iy, "i"))]);
+    else lines.push(["Die Ionen bilden das Salz", inp(t.c, "c") + t.d + dn(inp(t.ix, "i")) + t.x + dn(inp(t.iy, "i"))]);
+    return lines;
+  }
+  return [["Gesamtgleichung", side(t.gl[0]) + " → " + side(t.gl[1])]];
+}
+/* Teilgleichungen mit Faktor fo (Oxidation) und fr (Reduktion) multipliziert */
+function teilMul(t, fo, fr){
+  const n = fo * t.de;
+  if (t.typ === "oz") {
+    const d = t.dCh, a = t.aCh;
+    return [
+      inp(fo * d.n, "c") + onEl(d.el, d.from) + " → " + inp(fo * d.n, "c") + onEl(d.el, d.to) + " + " + inp(n, "e") + E,
+      inp(fr * a.n, "c") + onEl(a.el, a.from) + " + " + inp(n, "e") + E + " → " + inp(fr * a.n, "c") + onEl(a.el, a.to)];
+  }
+  const ox = inp(fo, "c") + t.d + " → " + inp(fo, "c") + ionH(t.d, t.q) + " + " + inp(n, "e") + E;
+  if (t.typ === "salt") return [ox,
+    inp(fr, "c") + t.aHTML + " + " + inp(n, "e") + E + " → " + inp(fr * t.k, "c") + ionH(t.x, -t.r)];
+  if (t.typ === "mion") return [ox,
+    inp(fr, "c") + ionH(t.a, t.r) + " + " + inp(n, "e") + E + " → " + inp(fr, "c") + t.a];
+  if (t.typ === "oxid") return [ox,
+    inp(fr * t.b, "c") + ionH(t.a, t.r) + " + " + inp(n, "e") + E + " → " + inp(fr * t.b, "c") + t.a];
+}
+const teilMal = t => clean(tt => teilMul(tt, tt.sol[0], tt.sol[1]), t);
+/* Zeile nach dem Addieren, noch nicht gekürzt (g = gemeinsamer Teiler) */
+function addiert(t){
+  const g = gcd(t.de, t.ae), [nd, na] = t.sol, n = g * nd * t.de;
+  if (t.typ === "salt") return ["Addiert (die " + n + " e<sup>−</sup> fallen heraus)",
+    co(g * nd) + t.d + " + " + co(g * na) + t.aHTML + " → " + co(g * nd) + ionH(t.d, t.q) + " + " + co(g * na * t.k) + ionH(t.x, -t.r)];
+  if (t.typ === "mion") return ["Addiert (die " + n + " e<sup>−</sup> fallen heraus)",
+    co(g * nd) + t.d + " + " + co(g * na) + t.aHTML + " → " + co(g * nd) + ionH(t.d, t.q) + " + " + co(g * na) + t.a];
+  return ["Ausgangsstoffe aus der Multiplikation", co(g * nd) + t.dHTML + " + " + co(g * na) + t.aHTML + " → …"];
+}
+function clean(fn, t){ CLEAN = true; try { return fn(t); } finally { CLEAN = false; } }
+
+/* ============ Phasen ============ */
 function startPhase(){
   S.tries = 0; S.tips = 0; S.phaseDone = false;
-  S.box = {d:0, a:0}; S.e = [0,0];
   $("tip").style.display = "none";
   $("check").classList.remove("hidden"); $("next").classList.add("hidden");
   $("tipBtn").classList.toggle("hidden", !learn());
-  $("steps").innerHTML = LV().steps.map((n,i) => '<span class="step ' + (i < S.phase ? "done" : i === S.phase ? "on" : "") + '">' + (i + 1) + " " + n + "</span>").join("");
-  const w = $("work"), t = S.t;
+  $("steps").innerHTML = LV().ph.map((p,i) => '<span class="step ' + (i < S.phase ? "done" : i === S.phase ? "on" : "") + '">' + (i + 1) + " " + N[p] + "</span>").join("");
+  const w = $("work"), t = S.t, p = PH(), nr = "Schritt " + (S.phase + 1) + ": ";
 
-  if (S.phase === 0 && !isOZ()) {
-    setMsg("Schritt 1: Wer gibt Elektronen ab?", "info");
+  if (p === "dona") {
+    setMsg(nr + "Wer gibt Elektronen ab?", "info");
     w.innerHTML = '<div class="q">Welches Teilchen gibt Elektronen ab (Elektronendonator)?</div><div class="choice" id="ch"></div>';
     $("check").classList.add("hidden");
     choices([["d", t.dHTML, t.dn], ["a", t.aHTML, t.an]], "d");
   }
-  else if (S.phase === 1 && isSch()) {
-    setMsg("Schritt 2: Gib die Valenzelektronen des Metalls ab.", "info");
-    S.at = [{el:t.d, role:"d", left:t.vd}, {el:t.a, role:"a", own:t.va, recv:[]}];
-    w.innerHTML = '<div class="sch"><svg id="schSvg" viewBox="0 0 600 330" role="img" aria-label="Schalenmodell der beteiligten Atome"></svg>' +
+  else if (p === "sch") {
+    setMsg(nr + "Gib die Valenzelektronen des Metalls ab.", "info");
+    S.D = [{left:t.q}];
+    S.A = [{atoms:[{recv:[]}, {recv:[]}]}];
+    w.innerHTML = '<div class="sch"><svg id="schSvg" viewBox="0 0 600 330" role="img" aria-label="Schalenmodell der beteiligten Teilchen"></svg>' +
       '<div class="ecount" id="ecnt"></div>' +
       '<div class="atb">' +
         '<div class="grp"><button class="minus" id="rmD" aria-label="Metall-Atom entfernen">−</button><button class="ion d" id="adD">+ ' + t.d + '-Atom</button></div>' +
-        '<div class="grp"><button class="minus" id="rmA" aria-label="Nichtmetall-Atom entfernen">−</button><button class="ion a" id="adA">+ ' + t.a + '-Atom</button></div>' +
-      '</div><p class="schnote">Rotes Elektron im Nichtmetall antippen = zurückschieben. Die Atome sind hier einzeln gezeichnet.</p></div>';
-    $("adD").onclick = () => addAtom("d"); $("adA").onclick = () => addAtom("a");
-    $("rmD").onclick = () => rmAtom("d");  $("rmA").onclick = () => rmAtom("a");
-    renderSch();
+        '<div class="grp"><button class="minus" id="rmA" aria-label="Molekül entfernen">−</button><button class="ion a" id="adA">+ ' + t.aHTML + '-Molekül</button></div>' +
+      '</div><p class="schnote">Rotes Elektron im Nichtmetall antippen = zurückschieben.<br>Im Molekül teilen sich die beiden Atome eigentlich ein Elektronenpaar. Hier sind sie vereinfacht nebeneinander gezeichnet.</p></div>';
+    $("adD").onclick = addDonor; $("adA").onclick = addUnit;
+    $("rmD").onclick = rmDonor;  $("rmA").onclick = rmUnit;
+    renderSch(true);
     if (!S.schHint) { showTip("Klicke die roten Valenzelektronen an, um sie abzugeben."); S.schHint = true; }
   }
-  else if (S.phase === 2 && isSch()) {
-    setMsg("Schritt 3: Welche Ladungen haben die Ionen? Wie lautet die Formel?", "info");
-    const opts = el => [1,2,3,-1,-2,-3].map(q => '<option value="' + q + '">' + ionTxt(el, q) + "</option>").join("");
-    const [nd, na] = t.sol;
-    let cand = [[nd,na],[na,nd],[1,1],[1,2],[2,1],[1,3],[3,1]];
-    const seen = new Set(); cand = cand.filter(([x,y]) => { const k = x + "," + y; if (seen.has(k)) return false; seen.add(k); return true; });
-    const right = cand[0]; const wrong = shuffle(cand.slice(1)).slice(0,2);
-    const fopts = shuffle([right, ...wrong]);
-    S.fRight = fopts.findIndex(p => p === right);
-    w.innerHTML = '<div class="lad">' +
-      '<div class="ln d"><span>Ion aus dem ' + ATOM[t.d].n + '-Atom</span><select id="qD"><option value="">?</option>' + opts(t.d) + "</select></div>" +
-      '<div class="ln a"><span>Ion aus dem ' + ATOM[t.a].n + '-Atom</span><select id="qA"><option value="">?</option>' + opts(t.a) + "</select></div>" +
-      '<div class="ln f"><span>Verhältnisformel</span><select id="qF"><option value="">?</option>' +
-        fopts.map((p,i) => '<option value="' + i + '">' + formTxt(t.d, p[0], t.a, p[1]) + "</option>").join("") + "</select></div>" +
-      "</div>";
+  else if (p === "teil") {
+    setMsg(nr + "Stelle die Teilgleichungen auf.", "info");
+    F = [];
+    const [ox, re] = teil(t), [lo, lr] = teilLab(t);
+    w.innerHTML = model() + '<div class="half">' +
+      '<div class="hl ox"><span class="lab">' + lo + '</span><div class="eql">' + ox + "</div></div>" +
+      '<div class="hl re"><span class="lab">' + lr + '</span><div class="eql">' + re + "</div></div></div>" +
+      '<p class="hint">Trage in jedes Kästchen eine Zahl ein, auch eine 1.</p>';
+    S.F = F; bindInputs();
   }
-  else if (S.phase === 1 && !isOZ()) {
-    setMsg("Schritt 2: Wie viele Elektronen?", "info");
-    const ox = t.ox, re = t.red;
-    w.innerHTML = '<div class="half">' +
-      '<div class="hl ox" id="hlox"><span class="lab">Oxidation (Elektronenabgabe)</span><span>' + fm(ox[0]) + " → " + fm(ox[1]) + " +</span>" + stepper(0) + "<span>e<sup>−</sup></span></div>" +
-      '<div class="hl re" id="hlre"><span class="lab">Reduktion (Elektronenaufnahme)</span><span>' + fm(re[0]) + " +</span>" + stepper(1) + "<span>e<sup>−</sup> → " + fm(re[1]) + "</span></div></div>";
-    bindSteppers();
+  else if (p === "kreuz") {
+    setMsg(nr + "Multipliziere die Teilgleichungen überkreuz.", "info");
+    const [ox, re] = clean(teil, t);
+    F = []; const fo = inp(t.ae, "c"); const Fo = F;            // Faktoren überkreuz
+    F = []; const fr = inp(t.de, "c"); const Fr = F;
+    F = []; const [mo, mr] = teilMul(t, t.ae, t.de);
+    const nOx = (mo.match(/<input/g) || []).length;
+    F = [...Fo, ...F.slice(0, nOx), ...Fr, ...F.slice(nOx)];     // Reihenfolge wie auf dem Bildschirm
+    w.innerHTML = model() + '<div class="half">' +
+      '<div class="hl ox"><span class="lab">Oxidation</span><div class="eql">' + ox + ' <span class="mul">| · ' + fo + "</span></div>" +
+        '<div class="eql l2">' + mo + "</div></div>" +
+      '<div class="hl re"><span class="lab">Reduktion</span><div class="eql">' + re + ' <span class="mul">| · ' + fr + "</span></div>" +
+        '<div class="eql l2">' + mr + "</div></div></div>" +
+      '<p class="hint">Überkreuz: Die Oxidation wird mit der Elektronenzahl der Reduktion multipliziert, die Reduktion mit der Elektronenzahl der Oxidation.</p>';
+    S.F = F; bindInputs();
   }
-  else if (S.phase === 0 && isOZ()) {
-    setMsg("Schritt 1: Bestimme alle Oxidationszahlen.", "info");
+  else if (p === "gesamt") {
+    setMsg(nr + "Stelle die Gesamtgleichung auf.", "info");
+    F = [];
+    const [la, ha] = addiert(t);
+    const kz = inp(gcd(t.de, t.ae), "c");
+    const lines = gesamt(t);
+    w.innerHTML = model() + '<div class="half">' +
+      '<div class="hl fg"><span class="lab">' + la + '</span><div class="eql">' + ha + "</div>" +
+        '<div class="eql l2"><span class="mul">Kürzen: Teile alle Zahlen durch ' + kz + "</span></div></div>" +
+      lines.map(([lab, h]) => '<div class="hl fg"><span class="lab">' + lab + '</span><div class="eql">' + h + "</div></div>").join("") +
+      '</div><p class="hint">Nicht kürzbar? Dann durch 1 teilen. Trage auch eine 1 ein, in der fertigen Gleichung schreibt man sie nicht.</p>';
+    S.F = F; bindInputs();
+  }
+  else if (p === "oz") {
+    setMsg(nr + "Bestimme alle Oxidationszahlen.", "info");
     let h = '<div class="eqon">';
     const ed = t.sp.filter(s => s[2] === 0), pr = t.sp.filter(s => s[2] === 1);
     const spc = (s, si) => '<span class="spc">' + s[3].map(([el,n],ei) =>
@@ -417,25 +559,26 @@ function startPhase(){
          pr.map(s => spc(s, t.sp.indexOf(s))).join('<span class="op">+</span>');
     w.innerHTML = h + "</div>";
   }
-  else if (S.phase === 1 && isOZ()) {
-    setMsg("Schritt 2: Wer ist das Reduktionsmittel?", "info");
+  else if (p === "rm") {
+    setMsg(nr + "Wer ist das Reduktionsmittel?", "info");
     w.innerHTML = '<div class="eqon">' + t.bare + '</div><div class="q">Welcher Stoff ist das Reduktionsmittel (Elektronendonator)?</div><div class="choice" id="ch"></div>';
     $("check").classList.add("hidden");
     choices([["d", t.dHTML, ""], ["a", t.aHTML, ""]], "d");
   }
-  else {
-    setMsg("Schritt 3: Gleiche die Elektronen aus!", "info");
-    w.innerHTML =
-      '<div class="stage"><div class="cnt r" id="nD"></div><div class="box">' +
-      '<div class="row" id="rowD"></div><div class="row" id="rowA"></div></div><div class="cnt bl" id="nA"></div></div>' +
-      '<div class="sums" id="sums"><span id="sD"></span><span id="sA"></span></div>' +
-      '<div class="coefs" id="coefs"></div>' +
-      '<div class="addb"><button class="ion d" id="addD">+ ' + t.dHTML + "<small>gibt " + t.de + " e<sup>−</sup> ab</small></button>" +
-      '<button class="ion a" id="addA">+ ' + t.aHTML + "<small>nimmt " + t.ae + " e<sup>−</sup> auf</small></button></div>";
-    $("addD").onclick = () => addBox("d"); $("addA").onclick = () => addBox("a");
-    renderBox();
-  }
   renderPts();
+}
+
+/* Stufe 1: fertiges Schalenmodell in den späteren Schritten klein mit anzeigen */
+function model(){ return LV().ph.includes("sch") ? '<div class="sch mini"><svg id="schSvg" role="img" aria-label="Dein Schalenmodell"></svg></div>' : ""; }
+
+function bindInputs(){
+  const ins = [...$("work").querySelectorAll("input.num")];
+  ins.forEach(el => el.addEventListener("input", () => {
+    el.value = el.value.replace(/\D/g, "");
+    el.classList.remove("wrong", "right");
+  }));
+  renderSch(false);
+  if (ins[0] && window.matchMedia("(pointer:fine)").matches) ins[0].focus();
 }
 
 function setMsg(t,c){ const m = $("msg"); m.textContent = t; m.className = "msg " + c; }
@@ -451,179 +594,163 @@ function choices(list, right){
     b.onclick = () => {
       if (S.phaseDone) return;
       if (k === right) { b.classList.add("okc"); phaseOK(); }
-      else { b.classList.add("badc"); fail(isOZ() ? "Nein, das Reduktionsmittel gibt Elektronen ab und wird dabei selbst oxidiert." : "Nein, dieses Teilchen nimmt Elektronen auf."); }
+      else { b.classList.add("badc"); fail(PH() === "rm" ? "Nein, das Reduktionsmittel gibt Elektronen ab und wird dabei selbst oxidiert." : "Nein, dieses Teilchen nimmt Elektronen auf."); }
     };
     box.appendChild(b);
   });
 }
 
-/* ---- Level 1: Schalenmodell ---- */
+/* ============ Stufe 1: Schalenmodell ============ */
 const NS = "http://www.w3.org/2000/svg";
 const COL = {d:"#c62828", a:"#3439c9", inner:"#666"};
 function svgEl(n, a){ const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; }
+const vaOf = el => EL[el].sh.at(-1);
+const full = at => vaOf(S.t.x) + at.recv.length >= 8;
 
-function addAtom(r){
+function addDonor(){
   if (S.phaseDone) return;
-  if (S.at.filter(x => x.role === r).length >= MAXAT) { setMsg("Mehr Atome passen nicht aufs Bild.", "bad"); return; }
-  const t = S.t;
-  // neues Atom wird ans Ende seiner Reihe gehaengt; Donator-Indizes bleiben dabei unveraendert
-  const neu = r === "d" ? {el:t.d, role:"d", left:t.vd} : {el:t.a, role:"a", own:t.va, recv:[]};
-  if (r === "d") {
-    const pos = S.at.filter(x => x.role === "d").length;
-    S.at.splice(pos, 0, neu);
-    S.at.forEach(x => { if (x.role === "a") x.recv = x.recv.map(i => i >= pos ? i + 1 : i); });
-  } else S.at.push(neu);
-  setMsg("Atom hinzugefügt.", "info");
-  renderSch();
+  if (S.D.length >= MAXD) return setMsg("Mehr Atome passen nicht aufs Bild.", "bad");
+  S.D.push({left:S.t.q}); setMsg("Atom hinzugefügt.", "info"); renderSch(true);
 }
-function rmAtom(r){
+function rmDonor(){
+  if (S.phaseDone || S.D.length <= 1) return;
+  const idx = S.D.length - 1;                      // Elektronen dieses Atoms verschwinden mit ihm
+  S.A.forEach(u => u.atoms.forEach(at => { at.recv = at.recv.filter(i => i !== idx); }));
+  S.D.pop(); renderSch(true);
+}
+function addUnit(){
   if (S.phaseDone) return;
-  const idx = S.at.map(x => x.role).lastIndexOf(r);
-  if (idx < 0 || S.at.filter(x => x.role === r).length <= 1) return;
-  if (r === "a") {
-    S.at[idx].recv.forEach(i => S.at[i].left++);          // Elektronen gehen zurueck
-  } else {
-    S.at.forEach(x => { if (x.role === "a") x.recv = x.recv.filter(i => i !== idx); });
-  }
-  S.at.splice(idx, 1);
-  S.at.forEach(x => { if (x.role === "a") x.recv = x.recv.map(i => i > idx ? i - 1 : i); });
-  renderSch();
+  if (S.A.length >= MAXU) return setMsg("Mehr Moleküle passen nicht aufs Bild.", "bad");
+  S.A.push({atoms:[{recv:[]}, {recv:[]}]}); setMsg("Molekül hinzugefügt.", "info"); renderSch(true);
 }
-function resetTransfers(){ S.at.forEach(x => { if (x.role === "d") x.left = S.t.vd; else x.recv = []; }); }
-
+function rmUnit(){
+  if (S.phaseDone || S.A.length <= 1) return;
+  S.A.pop().atoms.forEach(at => at.recv.forEach(i => S.D[i].left++));   // Elektronen gehen zurück
+  renderSch(true);
+}
 function moveFrom(i){
   if (S.phaseDone) return;
-  const d = S.at[i]; if (!d.left) return;
-  const j = S.at.findIndex(x => x.role === "a" && x.own + x.recv.length < 8);
-  if (j < 0) { setMsg("Kein Nichtmetall-Atom hat noch Platz. Füge ein weiteres hinzu!", "bad"); return; }
-  d.left--; S.at[j].recv.push(i);
-  setMsg(S.at.some(x => x.role === "d" && x.left) ? "Weiter so …" : "Alle Valenzelektronen des Metalls sind abgegeben. Prüfen?", "info");
-  renderSch();
+  const d = S.D[i]; if (!d.left) return;
+  let target = null;
+  for (const u of S.A) { for (const at of u.atoms) if (!full(at)) { target = at; break; } if (target) break; }
+  if (!target) return setMsg("Kein Nichtmetall-Atom hat noch Platz. Füge ein Molekül hinzu!", "bad");
+  d.left--; target.recv.push(i);
+  setMsg(S.D.some(x => x.left) ? "Weiter so …" : "Alle Valenzelektronen des Metalls sind abgegeben. Prüfen?", "info");
+  renderSch(true);
 }
-function moveBack(j, k){
+function moveBack(at, k){
   if (S.phaseDone) return;
-  const from = S.at[j].recv.splice(k, 1)[0]; S.at[from].left++; renderSch();
+  const from = at.recv.splice(k, 1)[0]; S.D[from].left++; renderSch(true);
 }
 
-function renderSch(){
-  const svg = $("schSvg"); if (!svg) return;
+function renderSch(inter){
+  const svg = $("schSvg"); if (!svg || !S.D.length) return;
   svg.innerHTML = "";
-  const rows = {d:S.at.map((x,i) => [x,i]).filter(([x]) => x.role === "d"), a:S.at.map((x,i) => [x,i]).filter(([x]) => x.role === "a")};
-  const Y = {d:92, a:245}, DX = 140;
-  svg.appendChild(svgEl("text", {x:8, y:20, "font-size":13, fill:COL.d, "font-weight":700})).textContent = "Metall-Atome (geben Elektronen ab)";
-  svg.appendChild(svgEl("text", {x:8, y:174, "font-size":13, fill:COL.a, "font-weight":700})).textContent = "Nichtmetall-Atome (nehmen Elektronen auf)";
-  ["d","a"].forEach(r => {
-    const list = rows[r], n = list.length;
-    list.forEach(([at, idx], k) => {
-      const cx = 300 + (k - (n - 1) / 2) * DX, cy = Y[r];
-      const sh = ATOM[at.el].sh, g = svgEl("g", {});
-      // innere Schalen
-      sh.forEach((cnt, s) => {
-        const rad = 30 + 14 * s, last = s === sh.length - 1;
-        const empty = last && r === "d" && at.left === 0;
-        g.appendChild(svgEl("circle", {cx, cy, r:rad, fill:"none", stroke: empty ? "#ccc" : "#999", "stroke-width":1.4, "stroke-dasharray": empty ? "4 4" : "none"}));
-        if (!last) for (let e = 0; e < cnt; e++) {
-          const ang = (-90 + e * 360 / cnt) * Math.PI / 180;
-          g.appendChild(svgEl("circle", {cx: cx + rad * Math.cos(ang), cy: cy + rad * Math.sin(ang), r:3.4, fill:COL.inner}));
-        }
-      });
-      g.appendChild(svgEl("circle", {cx, cy, r:17, fill:"#fff", stroke:"#333", "stroke-width":1.4}));
-      g.appendChild(svgEl("text", {x:cx, y:cy + 4, "text-anchor":"middle", "font-size":11, "font-weight":700})).textContent = ATOM[at.el].z + "+";
-      g.appendChild(svgEl("text", {x:cx - (30 + 14 * (sh.length - 1)) - 12, y:cy + 5, "text-anchor":"end", "font-size":15, "font-weight":700, fill: r === "d" ? COL.d : COL.a})).textContent = at.el;
-      const R = 30 + 14 * (sh.length - 1);
-      if (r === "d") {
-        for (let e = 0; e < at.left; e++) {
-          const ang = (-90 + e * 360 / S.t.vd) * Math.PI / 180;
-          const c = svgEl("circle", {cx: cx + R * Math.cos(ang), cy: cy + R * Math.sin(ang), r:6.5, fill:COL.d, stroke:"#fff", "stroke-width":1.5, class:"el"});
-          c.addEventListener("click", () => moveFrom(idx));
+  const t = S.t, dSh = EL[t.d].sh, aSh = EL[t.x].sh, va = vaOf(t.x);
+  const rad = s => 17 + 11 * s;
+  const RD = rad(dSh.length - 1), RA = rad(aSh.length - 1);
+  const dW = 2 * RD + 22, pairD = 2 * RA + 12, uW = pairD + 2 * RA + 16;
+  const nD = S.D.length, nU = S.A.length;
+  const rowD = nD * dW, rowA = nU * uW + (nU - 1) * 14;
+  const W = Math.max(600, rowD + 40, rowA + 40);
+  const cyD = 34 + RD, yT2 = cyD + RD + 44, cyA = yT2 + 22 + RA, H = cyA + RA + 40;
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  const txt = (x, y, s, a) => { const e = svgEl("text", Object.assign({x, y}, a)); e.textContent = s; svg.appendChild(e); return e; };
+  txt(8, 18, "Metall-Atome (geben Elektronen ab)", {"font-size":13, fill:COL.d, "font-weight":700});
+  txt(8, yT2, "Nichtmetall-Moleküle (nehmen Elektronen auf)", {"font-size":13, fill:COL.a, "font-weight":700});
+
+  const drawCore = (g, cx, cy, sh, withOuter) => {
+    sh.forEach((cnt, s) => {
+      const last = s === sh.length - 1; if (last && !withOuter) return;
+      const r = rad(s);
+      g.appendChild(svgEl("circle", {cx, cy, r, fill:"none", stroke:"#999", "stroke-width":1.4}));
+      if (!last) for (let e = 0; e < cnt; e++) {
+        const ang = (-90 + e * 360 / cnt) * Math.PI / 180;
+        g.appendChild(svgEl("circle", {cx: cx + r * Math.cos(ang), cy: cy + r * Math.sin(ang), r:3.2, fill:COL.inner}));
+      }
+    });
+  };
+  const nucleus = (g, cx, cy, el) => {
+    g.appendChild(svgEl("circle", {cx, cy, r:11, fill:"#fff", stroke:"#333", "stroke-width":1.3}));
+    const e = svgEl("text", {x:cx, y:cy + 3.5, "text-anchor":"middle", "font-size":9.5, "font-weight":700}); e.textContent = EL[el].z + "+"; g.appendChild(e);
+  };
+
+  // Metall-Atome: sind alle Valenzelektronen abgegeben, fällt die äußere Schale weg
+  S.D.forEach((dd, i) => {
+    const cx = W / 2 + (i - (nD - 1) / 2) * dW, g = svgEl("g", {});
+    drawCore(g, cx, cyD, dSh, dd.left > 0);
+    nucleus(g, cx, cyD, t.d);
+    for (let e = 0; e < dd.left; e++) {
+      const ang = (-90 + e * 360 / t.q) * Math.PI / 180;
+      const c = svgEl("circle", {cx: cx + RD * Math.cos(ang), cy: cyD + RD * Math.sin(ang), r:6.5, fill:COL.d, stroke:"#fff", "stroke-width":1.5, class: inter ? "el" : ""});
+      if (inter) c.addEventListener("click", () => moveFrom(i));
+      g.appendChild(c);
+    }
+    const lb = svgEl("text", {x:cx, y:cyD + RD + 17, "text-anchor":"middle", "font-size":14, "font-weight":700, fill:COL.d}); lb.textContent = t.d;
+    g.appendChild(lb); svg.appendChild(g);
+  });
+
+  // Nichtmetall-Moleküle: 2 Atome in einem Rahmen
+  S.A.forEach((u, ui) => {
+    const x0 = W / 2 - rowA / 2 + ui * (uW + 14), g = svgEl("g", {});
+    const done = u.atoms.every(full);
+    g.appendChild(svgEl("rect", {x:x0, y:cyA - RA - 8, width:uW, height:2 * RA + 16, rx:18, fill:"#f7f7ff", stroke:COL.a, "stroke-width":1.4, "stroke-dasharray": done ? "6 5" : "none"}));
+    u.atoms.forEach((at, ai) => {
+      const cx = x0 + 8 + RA + ai * pairD;
+      drawCore(g, cx, cyA, aSh, true);
+      nucleus(g, cx, cyA, t.x);
+      for (let e = 0; e < 8; e++) {
+        const ang = (-90 + 22.5 + e * 45) * Math.PI / 180, px = cx + RA * Math.cos(ang), py = cyA + RA * Math.sin(ang);
+        if (e < va) g.appendChild(svgEl("circle", {cx:px, cy:py, r:6.5, fill:COL.a, stroke:"#fff", "stroke-width":1.5}));
+        else if (e < va + at.recv.length) {
+          const k = e - va;
+          const c = svgEl("circle", {cx:px, cy:py, r:6.5, fill:COL.d, stroke:"#fff", "stroke-width":1.5, class: inter ? "el" : ""});
+          if (inter) c.addEventListener("click", () => moveBack(at, k));
           g.appendChild(c);
         }
-      } else {
-        for (let e = 0; e < 8; e++) {
-          const ang = (-90 + e * 45) * Math.PI / 180, px = cx + R * Math.cos(ang), py = cy + R * Math.sin(ang);
-          if (e < at.own) g.appendChild(svgEl("circle", {cx:px, cy:py, r:6.5, fill:COL.a, stroke:"#fff", "stroke-width":1.5}));
-          else if (e < at.own + at.recv.length) {
-            const k2 = e - at.own;
-            const c = svgEl("circle", {cx:px, cy:py, r:6.5, fill:COL.d, stroke:"#fff", "stroke-width":1.5, class:"el"});
-            c.addEventListener("click", () => moveBack(idx, k2));
-            g.appendChild(c);
-          }
-          else g.appendChild(svgEl("circle", {cx:px, cy:py, r:5, fill:"none", stroke:"#bbb", "stroke-width":1, "stroke-dasharray":"2 2"}));
-        }
+        else g.appendChild(svgEl("circle", {cx:px, cy:py, r:5, fill:"none", stroke:"#bbb", "stroke-width":1, "stroke-dasharray":"2 2"}));
       }
-      svg.appendChild(g);
     });
+    const lb = svgEl("text", {x:x0 + uW / 2, y:cyA + RA + 26, "text-anchor":"middle", "font-size":13, "font-weight":700, fill:COL.a});
+    lb.textContent = done ? "2 einzelne Ionen" : t.x + "₂-Molekül";
+    g.appendChild(lb); svg.appendChild(g);
   });
-  const ab = S.at.filter(x => x.role === "d").reduce((s,x) => s + (S.t.vd - x.left), 0);
-  const au = S.at.filter(x => x.role === "a").reduce((s,x) => s + x.recv.length, 0);
-  $("ecnt").innerHTML = learn() ? "abgegeben: " + ab + " e<sup>−</sup> &nbsp;·&nbsp; aufgenommen: " + au + " e<sup>−</sup>" : "";
+
+  const ec = $("ecnt");
+  if (ec) {
+    const ab = S.D.reduce((s, x) => s + (t.q - x.left), 0);
+    const au = S.A.reduce((s, u) => s + u.atoms.reduce((s2, at) => s2 + at.recv.length, 0), 0);
+    ec.innerHTML = learn() ? "abgegeben: " + ab + " e<sup>−</sup> &nbsp;·&nbsp; aufgenommen: " + au + " e<sup>−</sup>" : "";
+  }
 }
 
-/* ---- Stepper für Elektronenzahlen ---- */
-function stepper(i){ return '<span class="stp"><button data-i="' + i + '" data-d="-1" aria-label="weniger">−</button><span id="ev' + i + '">?</span><button data-i="' + i + '" data-d="1" aria-label="mehr">+</button></span>'; }
-function bindSteppers(){
-  document.querySelectorAll(".stp button").forEach(b => b.onclick = () => {
-    if (S.phaseDone) return;
-    const i = +b.dataset.i; S.e[i] = Math.max(0, Math.min(8, S.e[i] + (+b.dataset.d)));
-    $("ev" + i).textContent = S.e[i] || "?";
-    $(i ? "hlre" : "hlox").classList.remove("wrong");
+/* ============ Prüfen ============ */
+function checkInputs(){
+  const ins = [...$("work").querySelectorAll("input.num")];
+  if (ins.some(i => i.value.trim() === "")) return setMsg("Fülle zuerst alle Kästchen aus.", "bad");
+  let wrong = 0;
+  ins.forEach((el, i) => {
+    const ok = +el.value === S.F[i];
+    el.classList.remove("wrong", "right");
+    if (learn()) el.classList.add(ok ? "right" : "wrong");
+    if (!ok) wrong++;
   });
+  if (!wrong) { ins.forEach(el => el.disabled = true); return phaseOK(); }
+  return fail(wrong === 1 ? "Eine Zahl stimmt noch nicht" + (learn() ? " (rot markiert)." : ".")
+                          : wrong + " Zahlen stimmen noch nicht" + (learn() ? " (rot markiert)." : "."));
 }
 
-/* ---- Elektronenkasten ---- */
-function addBox(r){
-  if (S.phaseDone) return;
-  const e = r === "d" ? S.t.de : S.t.ae;
-  if ((S.box[r] + 1) * e > MAXE) { setMsg("Da passt nichts mehr hinein. Entferne Teilchen durch Antippen.", "bad"); return; }
-  S.box[r]++; renderBox();
-}
-function renderBox(){
-  const t = S.t, eD = S.box.d * t.de, eA = S.box.a * t.ae;
-  const unit = 100 / Math.max(8, eD, eA);
-  [["d","rowD",t.dHTML,t.de,"abgegebene Elektronen (Oxidation): Donator hinzufügen"],["a","rowA",t.aHTML,t.ae,"aufgenommene Elektronen (Reduktion): Akzeptor hinzufügen"]].forEach(([r,id,h,e,ph]) => {
-    const row = $(id); row.innerHTML = S.box[r] ? "" : '<div class="ph">' + ph + "</div>";
-    for (let k = 0; k < S.box[r]; k++) {
-      const d = document.createElement("div");
-      d.className = "blk " + r; d.style.width = (e * unit) + "%"; d.title = "Antippen zum Entfernen";
-      let dots = ""; for (let j = 0; j < e; j++) dots += '<span class="dot">e<sup>−</sup></span>';
-      d.innerHTML = "<span>" + h + '</span><span class="dots">' + dots + "</span>";
-      d.onclick = () => { if (!S.phaseDone) { S.box[r]--; renderBox(); } };
-      row.appendChild(d);
-    }
-  });
-  $("nD").textContent = S.box.d || ""; $("nA").textContent = S.box.a || "";
-  $("sums").style.visibility = learn() ? "visible" : "hidden";
-  $("sD").innerHTML = "abgegeben: " + eD + " e<sup>−</sup>"; $("sA").innerHTML = "aufgenommen: " + eA + " e<sup>−</sup>";
-  $("coefs").innerHTML = learn() && (S.box.d || S.box.a) ? (S.box.d + " " + t.dHTML + " + " + S.box.a + " " + t.aHTML + " → …") : "";
-}
-
-/* ---- Prüfen ---- */
 function check(){
   if (S.phaseDone) return;
-  const t = S.t;
-  if (S.phase === 1 && isSch()) {
-    const D = S.at.filter(x => x.role === "d"), A = S.at.filter(x => x.role === "a");
-    if (D.some(x => x.left)) return fail("Mindestens ein Metall-Atom hat noch Valenzelektronen. Es muss alle abgeben.");
-    if (A.some(x => x.own + x.recv.length < 8)) return fail("Mindestens ein Nichtmetall-Atom hat noch keine 8 Valenzelektronen.");
-    if (D.length !== t.sol[0]) return fail("Alles aufgefüllt, aber es geht mit weniger Atomen. Nimm das kleinste Verhältnis!");
+  const t = S.t, p = PH();
+  if (p === "sch") {
+    if (S.D.some(x => x.left)) return fail("Mindestens ein Metall-Atom hat noch Valenzelektronen. Es muss alle abgeben.");
+    if (S.A.some(u => u.atoms.some(at => !full(at)))) return fail("Mindestens ein Nichtmetall-Atom hat noch keine 8 Valenzelektronen.");
+    if (S.D.length !== t.sol[0]) return fail("Alles aufgefüllt, aber es geht mit weniger Teilchen. Nimm das kleinste Verhältnis!");
     return phaseOK();
   }
-  if (S.phase === 2 && isSch()) {
-    const qD = $("qD"), qA = $("qA"), qF = $("qF");
-    if (!qD.value || !qA.value || !qF.value) return setMsg("Wähle zuerst alle drei Felder aus.", "bad");
-    const okD = +qD.value === t.vd, okA = +qA.value === -t.need, okF = +qF.value === S.fRight;
-    [[qD,okD],[qA,okA],[qF,okF]].forEach(([s,ok]) => { s.classList.remove("wrong","right"); if (learn()) s.classList.add(ok ? "right" : "wrong"); });
-    if (okD && okA && okF) return phaseOK();
-    return fail(!okD || !okA ? "Eine Ladung stimmt noch nicht. Wie viele Elektronen wurden abgegeben bzw. aufgenommen?" : "Die Formel stimmt noch nicht. Schau auf die Anzahl der Atome im Bild.");
-  }
-  if (S.phase === 1 && isStd()) {
-    const okO = S.e[0] === t.ox[2], okR = S.e[1] === t.red[2];
-    if (okO && okR) return phaseOK();
-    if (!okO) $("hlox").classList.add("wrong");
-    if (!okR) $("hlre").classList.add("wrong");
-    return fail(!okO && !okR ? "Beide Elektronenzahlen stimmen noch nicht." : !okO ? "Die Oxidation stimmt noch nicht." : "Die Reduktion stimmt noch nicht.");
-  }
-  if (S.phase === 0 && isOZ()) {
+  if (p === "teil" || p === "kreuz" || p === "gesamt") return checkInputs();
+  if (p === "oz") {
     let wrong = 0, empty = 0;
     t.sp.forEach((s,si) => s[3].forEach(([,,on],ei) => {
       const sel = $("on_" + si + "_" + ei);
@@ -636,54 +763,64 @@ function check(){
     if (!wrong) return phaseOK();
     return fail(learn() ? wrong + " Oxidationszahl(en) noch falsch (rot markiert)." : wrong + " Oxidationszahl(en) noch falsch.");
   }
-  if (S.phase === 2) {
-    const eD = S.box.d * t.de, eA = S.box.a * t.ae;
-    if (!S.box.d || !S.box.a) return setMsg("Füge Donator- UND Akzeptor-Teilchen hinzu.", "bad");
-    if (eD !== eA) return fail(learn() ? "Noch nicht ausgeglichen: " + eD + " e⁻ abgegeben, aber " + eA + " e⁻ aufgenommen." : "Die Elektronen sind noch nicht ausgeglichen.");
-    if (S.box.d !== t.sol[0]) return fail("Ausgeglichen, aber es geht mit weniger Teilchen. Nimm das kleinste Verhältnis!");
-    return phaseOK();
-  }
 }
 
 function fail(txt){ S.tries++; S.err++; setMsg(txt, "bad"); }
 
 function phaseOK(){
-  const t = S.t;
+  const t = S.t, p = PH(), last = isLast();
   S.phaseDone = true;
-  const gain = S.tries === 0 ? PHASE_PTS[S.phase] : 10;
+  const gain = S.tries === 0 ? phasePts() : 10;
   if (S.mode === "Test") S.pts += gain;
   setMsg(praise() + (S.mode === "Test" ? "  +" + gain : ""), "ok");
   $("check").classList.add("hidden"); $("next").classList.remove("hidden");
+  const [nd, na] = t.sol;
   let ex = "";
-  const last = S.phase === 2;
-  if (S.phase === 0 && !isOZ())
+
+  if (p === "dona")
     ex = "<b>" + t.dHTML + "</b> gibt Elektronen ab → <b>Elektronendonator</b>, wird <b>oxidiert</b>.<br><b>" + t.aHTML + "</b> nimmt Elektronen auf → <b>Elektronenakzeptor</b>, wird <b>reduziert</b>.";
-  if (S.phase === 1 && isSch()) {
-    const [nd, na] = t.sol, n = nd * t.vd;
-    ex = nd + " " + t.d + "-Atom" + (nd > 1 ? "e geben" : " gibt") + " je " + t.vd + " e<sup>−</sup> ab = " + n + " e<sup>−</sup>.<br>" +
-         na + " " + t.a + "-Atom" + (na > 1 ? "e nehmen" : " nimmt") + " je " + t.need + " e<sup>−</sup> auf = " + n + " e<sup>−</sup>.<br>" +
-         "Das Metall hat jetzt eine leere äußere Schale, das Nichtmetall 8 Valenzelektronen (Oktett).";
+  if (p === "sch") {
+    const n = nd * t.de;
+    ex = pl(nd, t.d + "-Atom gibt", t.d + "-Atome geben") + " je " + t.de + " e<sup>−</sup> ab = " + n + " e<sup>−</sup>.<br>" +
+         pl(na, t.aHTML + "-Molekül nimmt", t.aHTML + "-Moleküle nehmen") + " je " + t.ae + " e<sup>−</sup> auf = " + n + " e<sup>−</sup>.<br>" +
+         "Die äußere Schale der Metall-Atome fällt weg. Die neue äußerste Schale ist voll besetzt (Edelgaszustand).<br>" +
+         "Jedes Nichtmetall-Atom hat jetzt 8 Valenzelektronen (Oktett). Aus jedem Molekül werden 2 einzelne Ionen.";
   }
-  if (S.phase === 1 && isStd())
-    ex = "Oxidation: " + fm(t.ox[0]) + " → " + fm(t.ox[1]) + " + " + t.ox[2] + " e<sup>−</sup><br>Reduktion: " + fm(t.red[0]) + " + " + t.red[2] + " e<sup>−</sup> → " + fm(t.red[1]) +
-         (t.note ? "<br>Hinweis: " + fm(t.note) : "");
-  if (S.phase === 0 && isOZ())
+  if (p === "teil") {
+    const [o, r] = clean(teil, t);
+    ex = "Oxidation: " + o + "<br>Reduktion: " + r;
+    if (t.typ === "salt" && t.k > 1) ex += "<br>Ein " + t.aHTML + "-Molekül besteht aus 2 Atomen. Deshalb entstehen 2 Ionen und es werden 2 · " + t.r + " = " + t.ae + " e<sup>−</sup> aufgenommen.";
+    if (t.typ === "oxid") ex += "<br>" + t.aHTML + " enthält " + t.b + " " + ionH(t.a, t.r) + "-Ion" + (t.b > 1 ? "en" : "") + (t.b > 1 ? " → nimmt " + t.b + " · " + t.r + " = " + t.ae + " e<sup>−</sup> auf." : ".");
+    if (t.typ === "oz") ex += "<br>Anzahl der Elektronen = Anzahl der Atome · Änderung der Oxidationszahl.";
+    if (t.note) ex += "<br>Hinweis: " + t.note;
+  }
+  if (p === "kreuz") {
+    const n = t.ae * t.de, g = gcd(t.de, t.ae);
+    ex = "Oxidation · " + t.ae + " und Reduktion · " + t.de + ": In beiden Teilgleichungen stehen jetzt " + n + " e<sup>−</sup>. " +
+         "Abgegebene Elektronen = aufgenommene Elektronen." +
+         (g > 1 ? "<br>Alle Zahlen sind noch durch " + g + " teilbar. Das kürzt du im nächsten Schritt." : "");
+  }
+  if (p === "oz")
     ex = "Oxidiert: " + t.dCh.el + " (" + onTxt(t.dCh.from) + " → " + onTxt(t.dCh.to) + "): die Oxidationszahl <b>steigt</b>.<br>Reduziert: " + t.aCh.el + " (" + onTxt(t.aCh.from) + " → " + onTxt(t.aCh.to) + "): die Oxidationszahl <b>sinkt</b>.";
-  if (S.phase === 1 && isOZ())
+  if (p === "rm")
     ex = "<b>" + t.dHTML + "</b> ist das <b>Reduktionsmittel</b>: Es gibt Elektronen ab und wird selbst oxidiert (" + t.dCh.el + ": " + onTxt(t.dCh.from) + " → " + onTxt(t.dCh.to) + ").<br>" +
          "<b>" + t.aHTML + "</b> ist das <b>Oxidationsmittel</b>: Es nimmt Elektronen auf und wird selbst reduziert (" + t.aCh.el + ": " + onTxt(t.aCh.from) + " → " + onTxt(t.aCh.to) + ").";
-  if (last && isSch()) {
-    const [nd, na] = t.sol, mol = ATOM[t.a].mol;
-    $("solbox").innerHTML = '<div class="sol">Oxidation: ' + t.d + " → " + ionHTML(t.d, t.vd) + " + " + t.vd + " e<sup>−</sup> &nbsp;|&nbsp; " +
-      "Reduktion: " + t.a + " + " + t.need + " e<sup>−</sup> → " + ionHTML(t.a, -t.need) +
-      '<br>Verhältnis ' + nd + " : " + na + ' &nbsp;→&nbsp; <span class="big">' + formHTML(t.d, nd, t.a, na) + "</span>" +
-      (mol ? '<br><small>In Wirklichkeit liegt ' + ATOM[t.a].n + " als Molekül " + fm(mol) + " vor. Das rechnest du in Level 2.</small>" : "") + "</div>";
-    S.solved++; S.done = true; $("next").textContent = "Nächste Reaktion →";
-  } else if (last) {
-    const n = S.box.d * t.de;
-    const sx = S.box.d + " × " + t.dHTML + (S.box.d > 1 ? " geben " : " gibt ") + S.box.d + " · " + t.de + " = " + n + " e<sup>−</sup> ab &nbsp;|&nbsp; " +
-         S.box.a + " × " + t.aHTML + (S.box.a > 1 ? " nehmen " : " nimmt ") + S.box.a + " · " + t.ae + " = " + n + " e<sup>−</sup> auf";
-    $("solbox").innerHTML = '<div class="sol">' + sx + '<br><span class="big">' + t.eqHTML + "</span></div>";
+
+  if (last) {
+    const [mo, mr] = teilMal(t), n = nd * t.de, lines = clean(gesamt, t);
+    const g = gcd(t.de, t.ae);
+    let h = "Überkreuz: Oxidation · " + t.ae + ", Reduktion · " + t.de + (g > 1 ? ", danach gekürzt durch " + g : ", nicht kürzbar") + ".<br>" +
+            "Oxidation: " + mo + "<br>Reduktion: " + mr + '<div class="sep"></div>';
+    if (t.typ === "salt") {
+      h += "Gesamtgleichung mit Ionen: " + lines[0][1] + " &nbsp;<small>(die " + n + " e<sup>−</sup> fallen heraus)</small><br>" +
+           'Salz: <span class="big">' + co(nd) + t.d + " + " + co(na) + t.aHTML + " → " + co(t.c) + t.saltH + "</span>";
+    } else {
+      h += 'Gesamtgleichung: <span class="big">' + lines[0][1] + "</span> &nbsp;<small>(die " + n + " e<sup>−</sup> fallen heraus)</small>";
+      if (t.typ === "oxid")
+        h += "<br><small>Die Oxid-Ionen (O<sup>2−</sup>) bleiben unverändert. Sie wechseln nur vom " + EL[t.a].n + " zum " + EL[t.d].n +
+             ". Deshalb kann man die Reaktion auch als Sauerstoffübertragung beschreiben.</small>";
+    }
+    $("solbox").innerHTML = '<div class="sol">' + h + "</div>";
     S.solved++; S.done = true; $("next").textContent = "Nächste Reaktion →";
   } else $("next").textContent = "Weiter →";
   if (ex) showTip(ex);
@@ -696,24 +833,40 @@ function next(){
   S.phase++; startPhase();
 }
 
-/* ---- Tipps ---- */
+/* ============ Tipps ============ */
 function tip(){
-  const t = S.t; S.tips++;
+  const t = S.t, p = PH(), second = ++S.tips > 1;
   let h = "";
-  if (S.phase === 0 && !isOZ()) h = "Metall-Atome geben Elektronen ab und werden zu positiv geladenen Ionen.";
-  else if (S.phase === 1 && isSch()) h = S.tips === 1
+  if (p === "dona") h = "Metall-Atome geben Elektronen ab und werden zu positiv geladenen Ionen.";
+  else if (p === "sch") h = !second
       ? "Tippe die roten Valenzelektronen des Metall-Atoms an. Sie wandern in die äußere Schale des Nichtmetalls."
-      : "Ein Nichtmetall-Atom braucht 8 Valenzelektronen. Hat das Metall noch Elektronen übrig, aber kein Nichtmetall mehr Platz → füge ein " + t.a + "-Atom hinzu. Fehlen dem Nichtmetall noch Elektronen → füge ein " + t.d + "-Atom hinzu.";
-  else if (S.phase === 2 && isSch()) h = S.tips === 1
-      ? "Metall: Ladung = Anzahl abgegebener Elektronen (positiv). Nichtmetall: Ladung = Anzahl aufgenommener Elektronen (negativ)."
-      : "Die Formel zählt die Atome aus deinem Bild: so viele " + t.d + " wie Metall-Atome, so viele " + t.a + " wie Nichtmetall-Atome.";
-  else if (S.phase === 1 && isStd()) h = S.tips === 1 ? "Die Ladung des entstehenden bzw. verbrauchten Ions verrät die Anzahl der Elektronen."
-         : "Zähle genau: " + fm(t.red[0]) + " → " + fm(t.red[1]) + ". Wie viele Elektronen braucht man insgesamt, damit diese Ladung entsteht bzw. verschwindet?";
-  else if (S.phase === 0) h = S.tips === 1 ? "Regeln: Elemente (z. B. H<sub>2</sub>, Cu, C) haben 0. Sauerstoff meist −II, Wasserstoff in Verbindungen meist +I. Die Summe in einem Molekül ist 0."
+      : "Ein Nichtmetall-Atom braucht 8 Valenzelektronen. Hat das Metall noch Elektronen übrig, aber kein Nichtmetall mehr Platz → füge ein " + t.aHTML + "-Molekül hinzu. Fehlen dem Nichtmetall noch Elektronen → füge ein " + t.d + "-Atom hinzu.";
+  else if (p === "teil" && t.info && !second) h = "Die römische Zahl in der Angabe ist die Ladung des Metall-Ions: " + t.d + "(" + ROM[t.q] + ") bedeutet " + ionH(t.d, t.q) + ".";
+  else if (p === "teil") {
+    if (t.typ === "salt") h = !second
+      ? (t.s1 ? "Schau ins Bild: Ein Metall-Atom gibt alle Valenzelektronen ab. Ladung des Ions = Anzahl der abgegebenen Elektronen."
+              : "Die Hauptgruppe im PSE verrät die Anzahl der Valenzelektronen. Metall-Atome geben sie ab. Nichtmetall-Atome nehmen so viele auf, bis sie 8 haben.")
+      : (t.k > 1 ? "Ein " + t.aHTML + "-Molekül besteht aus 2 Atomen. Es entstehen also 2 Ionen, und jedes Atom nimmt Elektronen auf."
+                 : "Aus einem " + t.x + "-Atom entsteht ein Ion. Es nimmt so viele Elektronen auf, bis es 8 Valenzelektronen hat.");
+    else if (t.typ === "mion") h = (!t.info && !second ? "Die Hauptgruppe im PSE verrät die Ladung des Metall-Ions. " : "") + "Die Ladung des Ions verrät die Anzahl der Elektronen: " + ionH(t.a, t.r) + " braucht " + (t.r > 1 ? t.r + " Elektronen" : "ein Elektron") + ", um wieder ein neutrales Atom zu werden.";
+    else if (t.typ === "oxid") h = !second
+      ? "Im Oxid sind die Metall-Ionen der Elektronenakzeptor. Ihre Ladung verrät, wie viele Elektronen jedes Ion aufnimmt."
+      : "Schau auf den Index: " + t.aHTML + " enthält " + t.b + " " + ionH(t.a, t.r) + "-Ion" + (t.b > 1 ? "en" : "") + ".";
+    else h = !second
+      ? "Anzahl der Elektronen = Anzahl der Atome · Änderung der Oxidationszahl."
+      : "Beispiel: 2 H (0) → 2 H (+I). Jedes H-Atom gibt 1 Elektron ab, zusammen 2 Elektronen. Die Anzahl der Atome liest du am Index ab.";
+  }
+  else if (p === "kreuz") h = !second
+      ? "Überkreuz: Die Oxidation wird mit " + t.ae + " multipliziert (Elektronen der Reduktion), die Reduktion mit " + t.de + " (Elektronen der Oxidation)."
+      : "Multipliziere jede Zahl der Teilgleichung mit dem Faktor, auch die Zahl vor dem Ion und vor e<sup>−</sup>. Keine Zahl davor bedeutet 1.";
+  else if (p === "gesamt") h = !second
+      ? "Kürzen: Suche die größte Zahl, durch die alle Koeffizienten teilbar sind. Geht das nicht, teilst du durch 1. Die gekürzten Zahlen trägst du unten ein."
+      : (t.typ === "salt"
+          ? "Im Salz gleichen sich Plus- und Minusladungen aus. Suche das kgV von " + t.q + " und " + t.r + "." + (t.s1 ? "" : " Die Zahl vor dem Salz: Anzahl der Metall-Ionen geteilt durch den Index des Metalls.")
+          : "Zähle jedes Element auf beiden Seiten. Links und rechts muss gleich viel stehen.");
+  else if (p === "oz") h = !second ? "Regeln: Elemente (z. B. H<sub>2</sub>, Cu, C) haben 0. Sauerstoff meist −II, Wasserstoff in Verbindungen meist +I. Die Summe in einem Molekül ist 0."
          : "Beispiel CO<sub>2</sub>: 2 · (−II) = −4, also muss C +IV haben. Rechne für Metalle rückwärts vom Sauerstoff.";
-  else if (S.phase === 1) h = "Das Reduktionsmittel ist der Stoff, in dem ein Element seine Oxidationszahl erhöht (es gibt Elektronen ab).";
-  else h = S.tips === 1 ? "Die rote und die blaue Zeile müssen gleich lang werden: abgegebene = aufgenommene Elektronen."
-         : "Suche das kleinste gemeinsame Vielfache: kgV(" + t.de + ", " + t.ae + ") = " + lcm(t.de, t.ae) + ".";
+  else if (p === "rm") h = "Das Reduktionsmittel ist der Stoff, in dem ein Element seine Oxidationszahl erhöht (es gibt Elektronen ab).";
   showTip(h);
 }
 
@@ -721,7 +874,7 @@ function win(){
   $("game").classList.add("hidden");
   const w = $("win"); w.classList.remove("hidden");
   w.innerHTML = "<h2>Geschafft! 🎉</h2><p style='font-size:19px'>" + GOAL + " Punkte mit " + S.solved + " Reaktionen erreicht.<br>Fehlversuche: " + S.err +
-    "</p><p>Level: " + LV().name + "</p><button class='go' id='again'>Nochmal spielen</button>";
+    "</p><p>Stufe: " + LV().name + "</p><button class='go' id='again'>Nochmal spielen</button>";
   $("again").onclick = start;
 }
 
@@ -741,7 +894,9 @@ $("check").onclick = check;
 $("next").onclick = next;
 $("tipBtn").onclick = tip;
 document.addEventListener("keydown", e => {
-  if (e.key === "Enter" && e.target.tagName !== "BUTTON" && e.target.tagName !== "SELECT" && !$("game").classList.contains("hidden")) { S.phaseDone ? next() : check(); }
+  if (e.key === "Enter" && e.target.tagName !== "BUTTON" && e.target.tagName !== "SELECT" && !$("game").classList.contains("hidden")) {
+    e.preventDefault(); S.phaseDone ? next() : check();
+  }
 });
 </script>
 </body>
