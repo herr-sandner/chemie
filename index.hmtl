@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chemie-Trainer</title>
+<meta name="description" content="Digitale Übungstrainer und Visualisierungen für den Chemieunterricht">
+<style>
+:root{
+  --green:#2e7d32; --green2:#4caf50; --green-bg:#eef7ee; --txt:#1d1d1d; --muted:#555;
+  --page:#f5f5f5; --bd:#ddd;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--page);color:var(--txt);
+  font-family:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+.app{max-width:1000px;margin:10px auto;padding:18px 20px 28px;background:#fff;border-radius:12px;
+  box-shadow:0 4px 16px rgba(0,0,0,.12)}
+
+h1{font-size:clamp(24px,4.5vw,34px);margin:6px 0 16px;text-align:center}
+
+/* Umschalter Trainer / Visualisierungen */
+.tabs{display:flex;justify-content:center;margin:0 0 22px}
+.seg{display:inline-flex;border:1.5px solid var(--green);border-radius:8px;overflow:hidden}
+.seg button{font:inherit;font-size:16px;font-weight:700;padding:8px 20px;border:0;background:#fff;color:var(--green);cursor:pointer}
+.seg button[aria-selected="true"]{background:var(--green);color:#fff}
+
+/* Kacheln */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+.tile{display:flex;flex-direction:column;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--bd);
+  border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);transition:border-color .15s, box-shadow .15s}
+.tile:hover,.tile:focus-visible{border-color:var(--green);box-shadow:0 3px 10px rgba(46,125,50,.25)}
+.prev{position:relative;height:130px;overflow:hidden;background:#f5f5f5;border-bottom:1px solid var(--bd)}
+.prev iframe{position:absolute;top:0;left:0;width:880px;height:560px;border:0;transform-origin:0 0;pointer-events:none;background:#f5f5f5}
+.prev img{width:100%;height:100%;object-fit:cover;display:block}
+.tile .body{padding:10px 12px 12px}
+.tile h2{margin:0 0 3px;font-size:17px;hyphens:auto;overflow-wrap:anywhere}
+.tile p{margin:0;font-size:14px;color:var(--muted);line-height:1.35}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);border:1.5px dashed var(--bd);border-radius:10px;padding:34px 16px}
+a:focus-visible,button:focus-visible{outline:3px solid #1b5e20;outline-offset:2px}
+
+@media (max-width:560px){
+  .app{margin:0;border-radius:0;padding:14px 12px 20px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .prev{height:100px}
+  .tile h2{font-size:15px}
+  .tile p{font-size:13px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>Chemie-Trainer</h1>
+
+  <div class="tabs">
+    <div class="seg" role="tablist" aria-label="Bereich wählen">
+      <button type="button" role="tab" data-typ="trainer" aria-selected="true">Trainer</button>
+      <button type="button" role="tab" data-typ="visual" aria-selected="false">Visualisierungen</button>
+    </div>
+  </div>
+
+  <div class="grid" id="grid" role="tabpanel"></div>
+</div>
+
+<script>
+"use strict";
+/* ============ Inhalte ============
+   Neue Seite ergänzen: HTML-Datei in diesen Ordner legen und unten einen Eintrag anhängen.
+   typ:   "trainer" oder "visual"
+   datei: Dateiname im selben Ordner
+   titel, text: erscheinen auf der Kachel
+   bild:  optional, z. B. "bilder/atommodell.png". Ohne Bild zeigt die Kachel eine verkleinerte Vorschau der Seite. */
+const INHALT = [
+  {typ:"trainer", datei:"Redox-Trainer.html", titel:"Redox-Trainer",
+   text:"Teilgleichungen, überkreuz multiplizieren und Gesamtgleichung aufstellen."},
+  {typ:"trainer", datei:"Verhaeltnisformel-Trainer.html", titel:"Verhältnisformel-Trainer",
+   text:"Ionenladungen ausgleichen und die Verhältnisformel eines Salzes finden."}
+  {typ:"visual", datei:"applet_Metallbindung_Verformbarkeit.html", titel:"Verformbarkeit", text:"Verformbarkeit von Metallgittern im Vergleich zu Ionengittern."}
+];
+
+const LEER = {trainer:"Noch keine Trainer vorhanden.", visual:"Hier erscheinen bald Visualisierungen."};
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+let typ = location.hash === "#visualisierungen" ? "visual" : "trainer";
+
+function render(){
+  document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.typ === typ)));
+  const list = INHALT.filter(e => e.typ === typ);
+  document.getElementById("grid").innerHTML = list.length ? list.map(e =>
+    '<a class="tile" href="' + esc(e.datei) + '">' +
+      '<div class="prev">' + (e.bild
+        ? '<img src="' + esc(e.bild) + '" alt="" loading="lazy">'
+        : '<iframe src="' + esc(e.datei) + '" loading="lazy" tabindex="-1" aria-hidden="true" title="Vorschau"></iframe>') + "</div>" +
+      '<div class="body"><h2>' + esc(e.titel) + "</h2><p>" + esc(e.text) + "</p></div></a>").join("")
+    : '<div class="empty">' + LEER[typ] + "</div>";
+  scalePreviews();
+}
+
+/* Vorschau: Seite verkleinert in die Kachel einpassen */
+function scalePreviews(){
+  document.querySelectorAll(".prev iframe").forEach(f => {
+    f.style.transform = "scale(" + (f.parentElement.clientWidth / 880) + ")";
+  });
+}
+window.addEventListener("resize", scalePreviews);
+
+document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => {
+  typ = b.dataset.typ;
+  history.replaceState(null, "", typ === "visual" ? "#visualisierungen" : location.pathname);
+  render();
+}));
+
+render();
+</script>
+</body>
+</html>
