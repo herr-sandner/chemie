@@ -74,6 +74,25 @@ html,body{margin:0;background:#f5f5f5;color:var(--txt);
 .win{text-align:center;padding:30px 10px}
 .win h2{color:var(--green);font-size:30px;margin:8px 0}
 sup,sub{font-size:.62em;line-height:0}
+.steps{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:2px 0 12px}
+.step{font-size:13px;padding:4px 10px;border-radius:14px;background:#eee;color:#666;border:1px solid #ddd}
+.step.on{background:var(--green);color:#fff;border-color:var(--green);font-weight:700}
+.step.done{background:#e3f2e3;color:var(--green);border-color:#b5d9b5}
+.q{text-align:center;font-size:18px;font-weight:600;margin:4px 0 12px}
+.ionq{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;max-width:720px;margin:0 auto}
+.iq{border:1.5px solid #999;border-radius:8px;padding:12px;background:#fafafa;text-align:center}
+.iq .el{font-size:21px;font-weight:700}
+.iq .el span{font-weight:400;color:#555}
+.opts{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0}
+.opt{min-width:48px;padding:8px 6px;border:1px solid #888;border-radius:5px;background:#fff;font:inherit;font-weight:700;font-size:17px;cursor:pointer;color:inherit}
+.opt:hover{background:#eee}
+.opt.sel{background:#333;color:#fff;border-color:#333}
+.iq .res{font-size:32px;font-weight:700;min-height:40px}
+.iq.wrong{border-color:var(--bad);background:#fbeaea}
+.iq.okc.c{background:var(--red-bg);border-color:var(--red-bd)}
+.iq.okc.a{background:var(--blue-bg);border-color:var(--blue-bd)}
+.ctrl{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:12px 0 4px}
+.ctrl div{display:flex;gap:6px}
 .hidden{display:none!important}
 @media (max-width:560px){
   .app{padding:10px 12px 16px;margin:0;border-radius:0}
@@ -102,8 +121,8 @@ sup,sub{font-size:.62em;line-height:0}
     <h1>Salze: Verhältnisformel-Trainer</h1>
     <p>Gleiche die Ionenladungen aus und finde die richtige Verhältnisformel.</p>
     <ol class="how">
-      <li>Lies den Namen des Salzes und überlege: Welche Ionen stecken darin?</li>
-      <li>Tippe die Ionen unten an – sie landen im Kasten. Antippen im Kasten entfernt sie wieder.</li>
+      <li>Lies den Namen des Salzes. Bestimme zuerst, welche Ionen die Hauptgruppen-Elemente bilden.</li>
+      <li>Tippe dann die Ionen unten an. Sie landen im Kasten, Antippen im Kasten entfernt sie wieder.</li>
       <li>Sind die rote und die blaue Reihe gleich lang, sind die Ladungen ausgeglichen.</li>
     </ol>
     <p>Im Testmodus gibt es keine Hilfen. Erreiche 1000 Punkte zum Gewinnen!</p>
@@ -118,7 +137,23 @@ sup,sub{font-size:.62em;line-height:0}
       <span class="ask">Stelle die Verhältnisformel auf:</span>
       <span class="pts" id="pts">Punkte: 0 / 1000</span>
     </div>
-    <div class="task" id="task">–</div>
+    <div class="task" id="task"></div>
+    <div class="steps" id="steps"></div>
+
+    <!-- Schritt 1: Ionen der Hauptgruppen-Elemente bestimmen -->
+    <div id="ionStep" class="hidden">
+      <div class="q">Welche Ionen bilden diese Elemente?</div>
+      <div class="ionq" id="ionq"></div>
+      <div class="msg info" id="msg1" role="status" aria-live="polite"></div>
+      <div class="ctrl">
+        <div><button class="b" id="tip1Btn">Tipp</button></div>
+        <div><button class="b pri" id="check1">Prüfen</button><button class="b pri hidden" id="next1">Weiter zur Formel →</button></div>
+      </div>
+      <div class="tip" id="tip1"></div>
+    </div>
+
+    <!-- Schritt 2: Verhältnisformel aufstellen -->
+    <div id="formStep">
     <div class="stage">
       <div class="cnt r" id="nC"></div>
       <div class="box" id="box">
@@ -138,6 +173,7 @@ sup,sub{font-size:.62em;line-height:0}
     <div class="pal" style="margin-top:12px">
       <div class="panel c" id="palC"></div>
       <div class="panel a" id="palA"></div>
+    </div>
     </div>
   </section>
 
@@ -205,12 +241,20 @@ const part = (ion,k) => k === 1 ? ion.s : (ion.poly ? "(" + ion.s + ")" : ion.s)
 const formulaHTML = (c,nc,a,na) => part(c,nc) + part(a,na);
 const saltName = (c,a) => c.n.endsWith(")") ? c.n + "-" + a.n.toLowerCase() : c.n + a.n.toLowerCase();
 const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
-const PRAISE = ["Klasse gemacht! Das ist absolut richtig.","Stark – Ladungen ausgeglichen!","Richtig! Weiter so.","Perfekt – das ist die Verhältnisformel.","Sehr gut!"];
+const PRAISE = ["Klasse gemacht! Das ist absolut richtig.","Stark, Ladungen ausgeglichen!","Richtig! Weiter so.","Perfekt, das ist die Verhältnisformel.","Sehr gut!"];
 
 /* ---------- Zustand ---------- */
 const S = { mode:"Lernen", lvl:1, nr:0, pts:0, solved:0, errTotal:0, task:null,
             tries:0, tips:0, done:false, deck:[], row:{c:[], a:[]} };
 const GOAL = 1000, MAXROW = 12;
+
+/* Hauptgruppen-Elemente: Ion-ID → [Elementname, Hauptgruppe] */
+const HG = {Li:["Lithium",1], Na:["Natrium",1], K:["Kalium",1], Mg:["Magnesium",2], Ca:["Calcium",2], Ba:["Barium",2],
+            Al:["Aluminium",3], N:["Stickstoff",5], P:["Phosphor",5], O:["Sauerstoff",6], S:["Schwefel",6],
+            F:["Fluor",7], Cl:["Chlor",7], Br:["Brom",7], I:["Iod",7]};
+const ROMHG = ["","I","II","III","IV","V","VI","VII","VIII"];
+const OPTS = [1,2,3,-1,-2,-3];
+const chgTxt = v => (Math.abs(v) > 1 ? Math.abs(v) : "") + (v > 0 ? "+" : "−");
 
 function buildDeck(){
   const cs = CAT.filter(i => i.l <= S.lvl), as = AN.filter(i => i.l <= S.lvl);
@@ -230,13 +274,88 @@ function newTask(){
   S.nr++; S.tries = 0; S.tips = 0; S.done = false; S.row = {c:[], a:[]};
   $("nr").textContent = "Salz-Nr. " + S.nr;
   $("task").textContent = saltName(t.c, t.a);
-  setMsg("", "info");
-  $("tip").style.display = "none";
+  // Hauptgruppen-Ionen, deren Ladung erst bestimmt werden muss
+  S.iq = [[t.c, 1, "c"], [t.a, -1, "a"]].filter(([ion]) => HG[ion.id])
+           .map(([ion, sg, r]) => ({ion, val:sg * ion.q, r, pick:null}));
+  S.phase = S.iq.length ? 0 : 1;
+  $("msg").textContent = ""; $("msg1").textContent = "";
+  $("tip").style.display = "none"; $("tip1").style.display = "none";
   $("check").classList.remove("hidden"); $("next").classList.add("hidden");
+  $("check1").classList.remove("hidden"); $("next1").classList.add("hidden");
+  if (S.phase === 0) renderIonStep();
+  showPhase();
   render();
 }
 
-function setMsg(t,cls){ const m = $("msg"); m.textContent = t; m.className = "msg " + cls; }
+function showPhase(){
+  $("ionStep").classList.toggle("hidden", S.phase !== 0);
+  $("formStep").classList.toggle("hidden", S.phase !== 1);
+  $("tip1Btn").classList.toggle("hidden", S.mode !== "Lernen");
+  $("steps").innerHTML = S.iq.length
+    ? '<span class="step ' + (S.phase === 0 ? "on" : "done") + '">1 Ionen bestimmen</span><span class="step ' + (S.phase === 1 ? "on" : "") + '">2 Formel aufstellen</span>'
+    : "";
+}
+
+function renderIonStep(){
+  const box = $("ionq"); box.innerHTML = "";
+  S.iq.forEach((q, k) => {
+    const [name] = HG[q.ion.id];
+    const d = document.createElement("div");
+    d.className = "iq"; d.id = "iq" + k;
+    d.innerHTML = '<div class="el">' + name + " <span>(" + q.ion.s + ')</span></div><div class="opts">' +
+      OPTS.map(v => '<button class="opt" data-v="' + v + '">' + chgTxt(v) + "</button>").join("") +
+      '</div><div class="res" id="res' + k + '">' + q.ion.s + "<sup>?</sup></div>";
+    d.querySelectorAll(".opt").forEach(b => b.onclick = () => {
+      if (S.phase !== 0 || !$("next1").classList.contains("hidden")) return;
+      q.pick = +b.dataset.v;
+      d.querySelectorAll(".opt").forEach(o => o.classList.toggle("sel", o === b));
+      d.classList.remove("wrong");
+      $("res" + k).innerHTML = q.ion.s + "<sup>" + chgTxt(q.pick) + "</sup>";
+      if ($("msg1").classList.contains("bad")) setMsg("", "info");
+    });
+    box.appendChild(d);
+  });
+}
+
+function checkIons(){
+  if (S.iq.some(q => q.pick === null)) { setMsg("Wähle für jedes Element eine Ladung.", "bad"); return; }
+  const learn = S.mode === "Lernen";
+  const wrong = S.iq.filter(q => q.pick !== q.val);
+  if (wrong.length) {
+    S.tries++; S.errTotal++;
+    let txt;
+    if (learn) {
+      wrong.forEach(q => $("iq" + S.iq.indexOf(q)).classList.add("wrong"));
+      const q = wrong[0], name = HG[q.ion.id][0];
+      txt = (q.pick > 0) !== (q.val > 0)
+        ? (q.val > 0 ? name + " ist ein Metall: Metall-Atome geben Elektronen ab und bilden positive Ionen."
+                     : name + " ist ein Nichtmetall: Nichtmetall-Atome nehmen Elektronen auf und bilden negative Ionen.")
+        : name + ": Das Vorzeichen stimmt, die Ladungszahl noch nicht. Schau auf die Hauptgruppe im PSE.";
+    } else txt = wrong.length === 1 ? "Ein Ion ist noch falsch." : "Beide Ionen sind noch falsch.";
+    setMsg(txt, "bad"); return;
+  }
+  S.iq.forEach((q, k) => { $("iq" + k).classList.add("okc", q.r); });
+  setMsg("Richtig! Jetzt die Verhältnisformel.", "ok");
+  $("check1").classList.add("hidden"); $("next1").classList.remove("hidden");
+  if (learn) showTip(S.iq.map(q => {
+    const [name, g] = HG[q.ion.id], n = Math.abs(q.val);
+    return "<b>" + name + "</b>: " + ROMHG[g] + ". Hauptgruppe, " +
+      (q.val > 0 ? "gibt " + n + " Außenelektron" + (n > 1 ? "en" : "") + " ab"
+                 : "nimmt 8 − " + g + " = " + n + " Elektron" + (n > 1 ? "en" : "") + " auf") +
+      " → " + ionHTML(q.ion, q.val > 0 ? 1 : -1);
+  }).join("<br>"), "tip1");
+}
+
+function tipIons(){
+  S.tips++;
+  if (S.tips === 1) showTip("Metall-Atome geben Elektronen ab und bilden positive Ionen. Nichtmetall-Atome nehmen Elektronen auf und bilden negative Ionen. Ziel: 8 Außenelektronen wie ein Edelgas.", "tip1");
+  else showTip("Die Hauptgruppe verrät die Zahl der Außenelektronen: " +
+    S.iq.map(q => HG[q.ion.id][0] + " steht in der " + ROMHG[HG[q.ion.id][1]] + ". Hauptgruppe").join(", ") + ".", "tip1");
+}
+
+function toFormula(){ S.phase = 1; S.tips = 0; showPhase(); setMsg("", "info"); render(); }
+
+function setMsg(t,cls){ const m = $(S.phase === 0 ? "msg1" : "msg"); m.textContent = t; m.className = "msg " + cls; }
 
 function palette(){
   const mk = (list,sign,box) => {
@@ -256,7 +375,7 @@ function sum(r){ return S.row[r].reduce((s,id) => s + byId[id].q, 0); }
 
 function add(r,id){
   if (S.done) return;
-  if (sum(r) + byId[id].q > MAXROW){ setMsg("Da passt nichts mehr hinein – entferne Ionen durch Antippen.", "bad"); return; }
+  if (sum(r) + byId[id].q > MAXROW){ setMsg("Da passt nichts mehr hinein. Entferne Ionen durch Antippen.", "bad"); return; }
   S.row[r].push(id); clearBad(); render();
 }
 function removeAt(r,i){ if (S.done) return; S.row[r].splice(i,1); clearBad(); render(); }
@@ -285,7 +404,7 @@ function render(){
   $("sC").textContent = "Ladung: +" + sc; $("sA").textContent = "Ladung: −" + sa;
   $("bal").textContent = sc && sc === sa ? "= ausgeglichen ✓" : ""; $("bal").className = "bal";
   $("tipBtn").classList.toggle("hidden", !learn);
-  // Formel live (Lernen) – nur wenn je Zeile eine Ionensorte
+  // Formel live (Lernen), nur wenn je Zeile eine Ionensorte
   const uc = [...new Set(S.row.c)], ua = [...new Set(S.row.a)];
   let f = "";
   if ((learn || S.done) && uc.length === 1 && ua.length === 1) f = formulaHTML(byId[uc[0]], nc, byId[ua[0]], na);
@@ -314,7 +433,7 @@ function check(){
   }
   else if (sc !== sa) err = learn ? "Noch nicht ausgeglichen: +" + sc + " und −" + sa + ". Beide Ladungssummen müssen gleich sein."
                                   : "Die Ladungen sind noch nicht ausgeglichen.";
-  else if (S.row.c.length !== t.nc) err = "Ausgeglichen – aber die Verhältnisformel gibt das kleinste ganzzahlige Verhältnis an. Kürze!";
+  else if (S.row.c.length !== t.nc) err = "Ausgeglichen, aber die Verhältnisformel gibt das kleinste ganzzahlige Verhältnis an. Kürze!";
   if (err){ S.tries++; S.errTotal++; setMsg(err, "bad"); return; }
 
   // richtig
@@ -332,7 +451,7 @@ function check(){
   if (S.mode === "Test" && S.pts >= GOAL) setTimeout(win, 900);
 }
 
-function showTip(html){ const e = $("tip"); e.innerHTML = html; e.style.display = "block"; }
+function showTip(html, id){ const e = $(id || "tip"); e.innerHTML = html; e.style.display = "block"; }
 function tip(){
   const t = S.task; S.tips++;
   if (S.tips === 1) showTip("Die Ionen: " + t.c.n + " → " + ionHTML(t.c,1) + ", " + t.a.n + " → " + ionHTML(t.a,-1) + ".");
@@ -366,8 +485,11 @@ $("check").onclick = check;
 $("next").onclick = newTask;
 $("clear").onclick = () => { if (!S.done){ S.row = {c:[], a:[]}; render(); } };
 $("tipBtn").onclick = tip;
+$("check1").onclick = checkIons;
+$("next1").onclick = toFormula;
+$("tip1Btn").onclick = tipIons;
 document.addEventListener("keydown", e => {
-  if (e.key === "Enter" && e.target.tagName !== "BUTTON" && !$("game").classList.contains("hidden")) { S.done ? newTask() : check(); }
+  if (e.key === "Enter" && e.target.tagName !== "BUTTON" && !$("game").classList.contains("hidden")) { if (S.phase === 0) { $("next1").classList.contains("hidden") ? checkIons() : toFormula(); } else { S.done ? newTask() : check(); } }
 });
 </script>
 </body>
