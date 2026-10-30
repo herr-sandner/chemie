@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radikalische Substitution von Methan</title>
+<style>
+  :root{
+    --akzent:#2E5AAC; --akzent-dunkel:#1c3a72;
+    --grau:#666; --bg:#ffffff; --panel:#f2f5fb; --rand:#cdd8ee;
+    --pfeil:#D2323C; --licht:#C77F1A; --ok:#2e7d32; --falsch:#b3261e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,Arial,sans-serif;color:#1b1b1b;background:var(--bg);}
+  .wrap{max-width:1100px;margin:0 auto;padding:16px;}
+  h1{font-size:1.25rem;color:var(--akzent-dunkel);margin:.2rem 0 .8rem;}
+  .layout{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start;}
+  .figur{flex:2 1 560px;min-width:320px;}
+  .seite{flex:1 1 280px;min-width:260px;}
+  svg{width:100%;height:auto;touch-action:none;user-select:none;display:block;}
+  text{font-family:inherit;}
+  .panel{background:var(--panel);border:1px solid var(--rand);border-radius:10px;padding:14px 16px;margin-bottom:14px;}
+  .buehne{background:#fff;border:1px solid var(--rand);border-radius:10px;padding:6px;}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+  .gleichung{font-size:1.35rem;text-align:center;margin:10px 0 2px;font-variant-numeric:tabular-nums;}
+  .erklaer{font-size:.98rem;line-height:1.45;margin:6px 4px 0;min-height:2.9em;}
+  .controls label{display:block;font-size:.9rem;color:var(--grau);margin:.2rem 0 .3rem;}
+  input[type=range]{width:100%;accent-color:var(--akzent);}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  button{font:inherit;border:1px solid var(--akzent);background:#fff;color:var(--akzent);border-radius:8px;padding:7px 12px;cursor:pointer;min-height:40px;}
+  button:hover{background:var(--akzent);color:#fff;}
+  button:focus-visible{outline:3px solid #9db6e6;outline-offset:2px;}
+  button.aktiv{background:var(--akzent);color:#fff;}
+  button:disabled{opacity:.4;cursor:default;background:#fff;color:var(--akzent);}
+  .frage p{margin:.1rem 0 .5rem;font-weight:600;}
+  .frage .optionen{display:flex;flex-direction:column;gap:6px;}
+  .frage .optionen button{text-align:left;}
+  .frage button.richtig{background:#e8f5e9;border-color:var(--ok);color:var(--ok);}
+  .frage button.falsch{background:#fdecea;border-color:var(--falsch);color:var(--falsch);}
+  .feedback{font-size:.92rem;margin-top:8px;line-height:1.4;min-height:1.4em;}
+  .versteckt{display:none !important;}
+  @media (prefers-reduced-motion: reduce){ #play{display:none;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Radikalische Substitution: Methan und Chlor</h1>
+
+  <div class="tabs" role="tablist" aria-label="Schritte">
+    <button class="tab" data-step="0">Start</button>
+    <button class="tab" data-step="1">Kette 1</button>
+    <button class="tab" data-step="2">Kette 2</button>
+    <button class="tab" data-step="3">Abbruch</button>
+    <button id="ueberblick">Gesamtübersicht</button>
+  </div>
+
+  <div class="layout">
+    <div class="figur">
+      <div class="buehne">
+        <svg id="fig" viewBox="0 0 600 260" aria-label="Valenzstrichformeln mit Elektronenpfeilen"></svg>
+        <svg id="uebersicht" class="versteckt" viewBox="0 0 600 260" aria-label="Gesamtübersicht des Mechanismus"></svg>
+      </div>
+      <div class="gleichung" id="gleichung"></div>
+      <div class="erklaer" id="erklaer"></div>
+      <div class="btns" id="abbruchWahl">
+        <button data-v="0">Cl• + •Cl</button>
+        <button data-v="1">•CH₃ + •CH₃</button>
+        <button data-v="2">Cl• + •CH₃</button>
+      </div>
+    </div>
+
+    <div class="seite">
+      <div class="panel controls">
+        <label for="tS">Ablauf des Schritts</label>
+        <input id="tS" type="range" min="0" max="1000" step="1" value="0" aria-label="Ablauf des Schritts">
+        <div class="btns">
+          <button id="zurueck" aria-label="Zurück">◀ Zurück</button>
+          <button id="play">▶ Abspielen</button>
+          <button id="weiter" aria-label="Weiter">Weiter ▶</button>
+        </div>
+      </div>
+
+      <div class="panel frage" id="frage">
+        <p id="fText"></p>
+        <div class="optionen" id="fOpt"></div>
+        <div class="feedback" id="fFeed" aria-live="polite"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const NS='http://www.w3.org/2000/svg';
+  const fig=$('fig'), ueb=$('uebersicht');
+  const HW={Cl:17,C:11,H:11};
+  const clamp=x=>Math.max(0,Math.min(1,x));
+  const ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+  const lerp=(a,b,u)=>a+(b-a)*u;
+
+  /* ---------- Szenen ---------- */
+  function H(id,x,y,px,py){return {id,el:'H',e:[x,y],p:[px,py]};}
+  const S=[];
+  // Start
+  S.push({name:'Kettenstart', licht:true,
+    gl:'Cl₂ → Cl• + •Cl <span style="color:var(--licht);font-size:.9rem">(durch Licht)</span>',
+    txt:'Licht spaltet die Bindung im Chlor-Molekül. Jedes Chlor-Atom erhält ein Elektron des Bindungspaars. Es entstehen zwei Chlor-Radikale.',
+    vor:'0', nach:'2',
+    atoms:[{id:'Cl1',el:'Cl',e:[250,140],p:[190,140],lp:['t','b','l']},
+           {id:'Cl2',el:'Cl',e:[350,140],p:[410,140],lp:['t','b','r']}],
+    keep:[], from:[['Cl1','Cl2']], to:[],
+    radFrom:{}, radTo:{Cl1:'r',Cl2:'l'},
+    arrows:[{p0:[298,135],c:[296,108],p2:[272,116],dest:{rad:'Cl1'}},
+            {p0:[302,145],c:[304,172],p2:[328,164],dest:{rad:'Cl2'}}]});
+  // Kette 1
+  S.push({name:'Kettenreaktion 1',
+    gl:'Cl• + CH₄ → HCl + •CH₃',
+    txt:'Das Chlor-Radikal bildet mit einem Elektron der C-H-Bindung eine neue Bindung zum H-Atom. Das zweite Elektron bleibt am C-Atom. Ein Methyl-Radikal entsteht.',
+    vor:'1', nach:'1',
+    atoms:[{id:'Cl',el:'Cl',e:[110,140],p:[110,140],lp:['t','b','l']},
+           H('H1',265,140,190,140),
+           {id:'C',el:'C',e:[345,140],p:[425,140]},
+           H('Ha',345,72,425,72),H('Hb',345,208,425,208),H('Hc',413,140,493,140)],
+    keep:[['C','Ha'],['C','Hb'],['C','Hc']], from:[['H1','C']], to:[['Cl','H1']],
+    radFrom:{Cl:'r'}, radTo:{C:'l'},
+    arrows:[{p0:[138,134],c:[160,96],p2:[184,126],dest:{bond:['Cl','H1']},src:{rad:'Cl'}},
+            {p0:[303,134],c:[250,82],p2:[194,124],dest:{bond:['Cl','H1']}},
+            {p0:[307,146],c:[312,174],p2:[330,156],dest:{rad:'C'}}]});
+  // Kette 2
+  S.push({name:'Kettenreaktion 2',
+    gl:'Cl₂ + •CH₃ → Cl• + CH₃Cl',
+    txt:'Das Methyl-Radikal spaltet ein Chlor-Molekül. Es entstehen Chlormethan und wieder ein Chlor-Radikal. Dieses startet Kettenreaktion 1 erneut.',
+    vor:'1', nach:'1',
+    atoms:[{id:'Cl1',el:'Cl',e:[110,140],p:[70,140],lp:['t','b','l']},
+           {id:'Cl2',el:'Cl',e:[210,140],p:[290,140],lp:['t','b','r'],lpTo:['t','b','l']},
+           {id:'C',el:'C',e:[380,140],p:[380,140]},
+           H('Ha',380,72,380,72),H('Hb',380,208,380,208),H('Hc',448,140,448,140)],
+    keep:[['C','Ha'],['C','Hb'],['C','Hc']], from:[['Cl1','Cl2']], to:[['Cl2','C']],
+    radFrom:{C:'l'}, radTo:{Cl1:'r'},
+    arrows:[{p0:[358,134],c:[336,96],p2:[302,126],dest:{bond:['Cl2','C']},src:{rad:'C'}},
+            {p0:[160,134],c:[232,48],p2:[292,124],dest:{bond:['Cl2','C']}},
+            {p0:[160,146],c:[150,174],p2:[132,158],dest:{rad:'Cl1'}}]});
+  // Abbrüche
+  const ABB=[
+    {name:'Kettenabbruch', gl:'Cl• + •Cl → Cl₂',
+     atoms:[{id:'A',el:'Cl',e:[150,140],p:[250,140],lp:['t','b','l']},
+            {id:'B',el:'Cl',e:[450,140],p:[350,140],lp:['t','b','r']}],
+     keep:[], from:[], to:[['A','B']], radFrom:{A:'r',B:'l'}, radTo:{},
+     arrows:[{p0:[178,134],c:[230,84],p2:[294,126],dest:{bond:['A','B']},src:{rad:'A'}},
+             {p0:[422,134],c:[370,84],p2:[306,126],dest:{bond:['A','B']},src:{rad:'B'}}]},
+    {name:'Kettenabbruch', gl:'•CH₃ + •CH₃ → C₂H₆',
+     atoms:[{id:'A',el:'C',e:[190,140],p:[255,140]},H('a1',190,72,255,72),H('a2',190,208,255,208),H('a3',122,140,187,140),
+            {id:'B',el:'C',e:[410,140],p:[345,140]},H('b1',410,72,345,72),H('b2',410,208,345,208),H('b3',478,140,413,140)],
+     keep:[['A','a1'],['A','a2'],['A','a3'],['B','b1'],['B','b2'],['B','b3']], from:[], to:[['A','B']],
+     radFrom:{A:'r',B:'l'}, radTo:{},
+     arrows:[{p0:[212,134],c:[250,90],p2:[294,126],dest:{bond:['A','B']},src:{rad:'A'}},
+             {p0:[388,134],c:[350,90],p2:[306,126],dest:{bond:['A','B']},src:{rad:'B'}}]},
+    {name:'Kettenabbruch', gl:'Cl• + •CH₃ → CH₃Cl',
+     atoms:[{id:'A',el:'Cl',e:[150,140],p:[240,140],lp:['t','b','l']},
+            {id:'B',el:'C',e:[420,140],p:[330,140]},H('b1',420,72,330,72),H('b2',420,208,330,208),H('b3',488,140,398,140)],
+     keep:[['B','b1'],['B','b2'],['B','b3']], from:[], to:[['A','B']],
+     radFrom:{A:'r',B:'l'}, radTo:{},
+     arrows:[{p0:[178,134],c:[226,84],p2:[280,126],dest:{bond:['A','B']},src:{rad:'A'}},
+             {p0:[398,134],c:[352,84],p2:[292,126],dest:{bond:['A','B']},src:{rad:'B'}}]}
+  ];
+  const ABBTXT='Treffen zwei Radikale aufeinander, bilden ihre ungepaarten Elektronen eine Bindung. Es entsteht kein neues Radikal, die Kette endet. Abbrüche sind selten, weil es nur wenige Radikale gibt.';
+
+  const FRAGEN=[
+    {q:'Wie viele Einhakenpfeile braucht die Spaltung von Cl₂?',
+     o:[['1',false,'Ein Pfeil steht für ein Elektron. Die Bindung besteht aus zwei Elektronen.'],
+        ['2',true,'Richtig. Jedes der beiden Bindungselektronen bekommt einen eigenen Pfeil.'],
+        ['3',false,'Zähle die Elektronen in der Bindung: Es sind zwei.']]},
+    {q:'Was entsteht in Kettenreaktion 1?',
+     o:[['CH₃Cl und ein H-Radikal',false,'Schau genau hin: Das Chlor-Radikal holt sich das H-Atom, nicht das C-Atom.'],
+        ['HCl und ein Methyl-Radikal',true,'Richtig. Das Cl bindet das H, das C behält ein Elektron und wird zum Radikal.'],
+        ['Cl₂ und CH₄',false,'Das sind die Stoffe, mit denen alles beginnt. Hier reagiert aber Cl• mit CH₄.']]},
+    {q:'Warum spricht man von einer Kettenreaktion?',
+     o:[['Die Moleküle bilden lange Ketten.',false,'Die Kette meint nicht die Moleküle, sondern die Abfolge der Reaktionsschritte.'],
+        ['Am Ende entsteht wieder ein Chlor-Radikal.',true,'Richtig. Das neue Cl• startet Kettenreaktion 1 erneut. Deshalb reicht wenig Licht für viel Produkt.'],
+        ['Für jeden Schritt braucht man neues Licht.',false,'Licht braucht man nur für den Start. Die Kettenschritte laufen ohne Licht weiter.']]},
+    {q:'Was passiert beim Kettenabbruch mit den Radikalen?',
+     o:[['Zwei Radikale bilden eine Bindung.',true,'Richtig. Die ungepaarten Elektronen werden zu einem Bindungspaar. Kein Radikal bleibt übrig.'],
+        ['Es entstehen zwei neue Radikale.',false,'Das passiert beim Start. Beim Abbruch verschwinden Radikale.'],
+        ['Ein Radikal zerfällt in Atome.',false,'Radikale zerfallen nicht. Sie reagieren mit einem anderen Radikal.']]}
+  ];
+
+  /* ---------- Zustand ---------- */
+  let step=0, abb=0, t=0, playing=false, raf=null, last=0, wait=0, ansicht='schritt';
+  const scene=()=>step<3?S[step]:Object.assign({},ABB[abb],{txt:ABBTXT,vor:'2',nach:'0'});
+
+  /* ---------- Zeichnen ---------- */
+  function el(name,a,parent){const e=document.createElementNS(NS,name);for(const k in a)e.setAttribute(k,a[k]);(parent||fig).appendChild(e);return e;}
+  function radPos(atom,pos,side){return [pos[0]+(side==='r'?1:-1)*(HW[atom.el]+9),pos[1]];}
+  function bez(a,u){const x=(1-u)*(1-u)*a.p0[0]+2*(1-u)*u*a.c[0]+u*u*a.p2[0];
+                    const y=(1-u)*(1-u)*a.p0[1]+2*(1-u)*u*a.c[1]+u*u*a.p2[1];return [x,y];}
+  function drawLP(g,x,y,sides,op){
+    sides.forEach(s=>{let a;
+      if(s==='t')a=[x-14,y-24,x+14,y-24]; if(s==='b')a=[x-14,y+24,x+14,y+24];
+      if(s==='l')a=[x-27,y-12,x-27,y+12]; if(s==='r')a=[x+27,y-12,x+27,y+12];
+      el('line',{x1:a[0],y1:a[1],x2:a[2],y2:a[3],stroke:'#111','stroke-width':2.4,opacity:op},g);});
+  }
+  function bondLine(g,A,B,pa,pb,op){
+    const dx=pb[0]-pa[0],dy=pb[1]-pa[1],L=Math.hypot(dx,dy); if(L<1)return;
+    const ux=dx/L,uy=dy/L;
+    const ra=Math.hypot(HW[A.el]*ux,15*uy)+5, rb=Math.hypot(HW[B.el]*ux,15*uy)+5;
+    el('line',{x1:pa[0]+ux*ra,y1:pa[1]+uy*ra,x2:pb[0]-ux*rb,y2:pb[1]-uy*rb,stroke:'#111','stroke-width':2.4,opacity:op},g);
+  }
+  function arrowPath(a){return `M ${a.p0[0]} ${a.p0[1]} Q ${a.c[0]} ${a.c[1]} ${a.p2[0]} ${a.p2[1]}`;}
+  function barb(a){ // halbe Pfeilspitze
+    const dx=a.p2[0]-a.c[0],dy=a.p2[1]-a.c[1],L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L;
+    const side=(a.p2[0]-a.p0[0])*(a.c[1]-a.p0[1])-(a.p2[1]-a.p0[1])*(a.c[0]-a.p0[0])>0?1:-1;
+    const ang=0.5*side, bx=-(ux*Math.cos(ang)-uy*Math.sin(ang))*12, by=-(ux*Math.sin(ang)+uy*Math.cos(ang))*12;
+    return `M ${a.p2[0]} ${a.p2[1]} L ${a.p2[0]+bx} ${a.p2[1]+by}`;
+  }
+
+  function draw(){
+    const sc=scene();
+    fig.innerHTML='';
+    const pA=clamp(t/0.40), pE=ease(clamp((t-0.44)/0.24)), pM=ease(clamp((t-0.73)/0.25));
+    const pos={}, byId={};
+    sc.atoms.forEach(a=>{byId[a.id]=a; pos[a.id]=[lerp(a.e[0],a.p[0],pM),lerp(a.e[1],a.p[1],pM)];});
+    const g=el('g',{});
+    // Licht
+    if(sc.licht){
+      const op=1-clamp((t-0.25)/0.15);
+      const lg=el('g',{opacity:op},g);
+      [-30,0,30].forEach(dx=>{
+        el('path',{d:`M ${300+dx-6} 18 q 8 6 0 12 q -8 6 0 12 q 8 6 0 12`,fill:'none',stroke:'var(--licht)','stroke-width':2.4},lg);
+        el('path',{d:`M ${300+dx-6} 60 l -5 -8 m 5 8 l 6 -7`,fill:'none',stroke:'var(--licht)','stroke-width':2.4},lg);
+      });
+      const tx=el('text',{x:345,y:40,'font-size':16,fill:'var(--licht)'},lg); tx.textContent='Licht';
+    }
+    // bleibende Bindungen
+    sc.keep.forEach(([a,b])=>bondLine(g,byId[a],byId[b],pos[a],pos[b],1));
+    // gespaltene Bindungen
+    sc.from.forEach(([a,b])=>bondLine(g,byId[a],byId[b],pos[a],pos[b],pE>0?0:1));
+    // neue Bindungen
+    sc.to.forEach(([a,b])=>bondLine(g,byId[a],byId[b],pos[a],pos[b],clamp((t-0.68)/0.05)));
+    // Atome
+    sc.atoms.forEach(a=>{
+      const [x,y]=pos[a.id];
+      const tx=el('text',{x:x,y:y+11,'font-size':32,'text-anchor':'middle',fill:'#111'},g); tx.textContent=a.el;
+      if(a.lp){ if(a.lpTo){ const m=clamp((t-0.68)/0.1);
+          drawLP(g,x,y,a.lp.filter(s=>a.lpTo.includes(s)),1);
+          drawLP(g,x,y,a.lp.filter(s=>!a.lpTo.includes(s)),1-m);
+          drawLP(g,x,y,a.lpTo.filter(s=>!a.lp.includes(s)),m);
+        } else drawLP(g,x,y,a.lp,1); }
+    });
+    // Radikal-Elektronen vorher
+    for(const id in sc.radFrom){ if(pE>0)continue; const p=radPos(byId[id],pos[id],sc.radFrom[id]);
+      el('circle',{cx:p[0],cy:p[1],r:4.5,fill:'#111'},g); }
+    // Pfeile
+    const arrOp=1-pM;
+    sc.arrows.forEach((a,i)=>{
+      const n=sc.arrows.length, pi=ease(clamp(pA*n-i));
+      if(pi<=0)return;
+      const P=el('path',{d:arrowPath(a),fill:'none',stroke:'var(--pfeil)','stroke-width':2.4,'stroke-linecap':'round',opacity:arrOp},g);
+      const len=P.getTotalLength(); P.setAttribute('stroke-dasharray',len); P.setAttribute('stroke-dashoffset',len*(1-pi));
+      if(pi>0.97) el('path',{d:barb(a),stroke:'var(--pfeil)','stroke-width':2.4,'stroke-linecap':'round',fill:'none',opacity:arrOp},g);
+    });
+    // wandernde Elektronen
+    if(pE>0){
+      sc.arrows.forEach(a=>{
+        if(pE<1){ const p=bez(a,pE); el('circle',{cx:p[0],cy:p[1],r:5,fill:'var(--pfeil)'},g); }
+        else if(a.dest.rad){ const id=a.dest.rad, fin=radPos(byId[id],pos[id],sc.radTo[id]);
+          const st=a.p2, p=[lerp(st[0],fin[0],pM),lerp(st[1],fin[1],pM)];
+          const red=pM<1; el('circle',{cx:p[0],cy:p[1],r:red?5:4.5,fill:red?'var(--pfeil)':'#111'},g); }
+        else if(a.dest.bond && t<0.72){ const p=a.p2; el('circle',{cx:p[0],cy:p[1],r:5,fill:'var(--pfeil)',opacity:1-clamp((t-0.68)/0.04)},g); }
+      });
+    }
+    $('tS').value=Math.round(t*1000);
+  }
+
+  /* ---------- Übersicht ---------- */
+  function drawUeb(){
+    ueb.innerHTML='';
+    const box=(x,y,w,txt,sub,st)=>{
+      const g=el('g',{cursor:'pointer',tabindex:0,role:'button','aria-label':txt},ueb);
+      el('rect',{x,y,width:w,height:56,rx:10,fill:'#fff',stroke:'var(--akzent)','stroke-width':2},g);
+      const a=el('text',{x:x+w/2,y:y+24,'text-anchor':'middle','font-size':15,'font-weight':600,fill:'var(--akzent-dunkel)'},g); a.textContent=txt;
+      const b=el('text',{x:x+w/2,y:y+45,'text-anchor':'middle','font-size':15,fill:'#111'},g); b.textContent=sub;
+      const go=()=>{zeigeSchritt();setStep(st);};
+      g.addEventListener('click',go); g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')go();});
+    };
+    const pf=(d)=>el('path',{d,fill:'none',stroke:'#555','stroke-width':2,'marker-end':'url(#spitze)'},ueb);
+    const defs=el('defs',{},ueb); const m=el('marker',{id:'spitze',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto'},defs);
+    el('path',{d:'M0 0 L10 5 L0 10 z',fill:'#555'},m);
+    box(30,14,250,'Start','Cl₂ → 2 Cl•',0);
+    box(30,104,250,'Kette 1','Cl• + CH₄ → HCl + •CH₃',1);
+    box(320,104,250,'Kette 2','Cl₂ + •CH₃ → Cl• + CH₃Cl',2);
+    box(320,200,250,'Abbruch','2 Radikale → 1 Molekül',3);
+    pf('M 155 70 L 155 101'); pf('M 280 118 L 317 118');
+    pf('M 317 140 L 283 140');
+    const k=el('text',{x:300,y:158,'text-anchor':'middle','font-size':13,fill:'#555'},ueb); k.textContent='Cl•';
+    pf('M 470 160 L 470 197');
+    const l=el('text',{x:290,y:46,'text-anchor':'start','font-size':14,fill:'var(--licht)'},ueb); l.textContent='nur hier Licht';
+  }
+
+  /* ---------- Fragen ---------- */
+  function zeigeFrage(){
+    const f=FRAGEN[step]; $('fText').textContent=f.q; $('fFeed').textContent='';
+    const box=$('fOpt'); box.innerHTML='';
+    f.o.forEach(([txt,ok,fb])=>{const b=document.createElement('button'); b.textContent=txt;
+      b.addEventListener('click',()=>{[...box.children].forEach(c=>c.classList.remove('richtig','falsch'));
+        b.classList.add(ok?'richtig':'falsch'); $('fFeed').textContent=fb; $('fFeed').style.color=ok?'var(--ok)':'var(--falsch)';});
+      box.appendChild(b);});
+  }
+
+  /* ---------- Steuerung ---------- */
+  function setStep(s){ step=Math.max(0,Math.min(3,s)); t=0; stop(); aktualisiere(); }
+  function aktualisiere(){
+    const sc=scene();
+    $('gleichung').innerHTML=sc.gl; $('erklaer').textContent=sc.txt;
+    document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('aktiv',+b.dataset.step===step&&ansicht==='schritt'));
+    $('ueberblick').classList.toggle('aktiv',ansicht==='ueb');
+    $('abbruchWahl').classList.toggle('versteckt',!(step===3&&ansicht==='schritt'));
+    document.querySelectorAll('#abbruchWahl button').forEach(b=>b.classList.toggle('aktiv',+b.dataset.v===abb));
+    $('zurueck').disabled=step===0; $('weiter').disabled=step===3&&t>=1;
+    zeigeFrage(); draw();
+  }
+  function zeigeSchritt(){ ansicht='schritt'; fig.classList.remove('versteckt'); ueb.classList.add('versteckt'); }
+  function stop(){ playing=false; cancelAnimationFrame(raf); $('play').textContent='▶ Abspielen'; }
+  function tick(now){
+    if(!playing)return;
+    const dt=Math.min(64,now-last); last=now;
+    if(t<1){ t=Math.min(1,t+dt/8000); draw(); if(t>=1)wait=0; }
+    else { wait+=dt; if(wait>1400){ if(step<3){ step++; t=0; aktualisiere(); } else { stop(); aktualisiere(); return; } } }
+    raf=requestAnimationFrame(tick);
+  }
+  $('play').addEventListener('click',()=>{
+    if(playing){stop();return;}
+    zeigeSchritt(); if(step===3&&t>=1){t=0;} playing=true; $('play').textContent='❚❚ Pause';
+    last=performance.now(); raf=requestAnimationFrame(tick); aktualisiere(); playing=true; $('play').textContent='❚❚ Pause';
+  });
+  $('weiter').addEventListener('click',()=>{ zeigeSchritt(); if(t<1){ stop(); t=1; aktualisiere(); } else setStep(step+1); });
+  $('zurueck').addEventListener('click',()=>{ zeigeSchritt(); if(t>0){ stop(); t=0; aktualisiere(); } else setStep(step-1); });
+  $('tS').addEventListener('input',()=>{ zeigeSchritt(); stop(); t=$('tS').value/1000; draw(); $('weiter').disabled=step===3&&t>=1; });
+  document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{ zeigeSchritt(); setStep(+b.dataset.step); }));
+  document.querySelectorAll('#abbruchWahl button').forEach(b=>b.addEventListener('click',()=>{ abb=+b.dataset.v; t=0; stop(); aktualisiere(); }));
+  $('ueberblick').addEventListener('click',()=>{ stop(); ansicht='ueb'; fig.classList.add('versteckt'); ueb.classList.remove('versteckt');
+    $('gleichung').textContent='CH₄ + Cl₂ → CH₃Cl + HCl'; $('erklaer').textContent='Klicke auf einen Schritt, um ihn anzusehen.';
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('aktiv')); $('ueberblick').classList.add('aktiv');
+    $('abbruchWahl').classList.add('versteckt'); });
+  document.addEventListener('keydown',e=>{ if(e.target.tagName==='INPUT')return;
+    if(e.key==='ArrowRight')$('weiter').click(); if(e.key==='ArrowLeft')$('zurueck').click(); });
+
+  drawUeb(); aktualisiere();
+})();
+</script>
+</body>
+</html>
