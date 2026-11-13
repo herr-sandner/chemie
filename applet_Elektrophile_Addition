@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elektrophile Addition</title>
+<style>
+  :root{
+    --akzent:#2E5AAC; --akzent-dunkel:#1c3a72;
+    --grau:#666; --bg:#ffffff; --panel:#f2f5fb; --rand:#cdd8ee;
+    --pfeil:#D2323C; --dplus:#D2323C; --dminus:#2E5AAC; --ok:#2e7d32; --falsch:#b3261e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,Arial,sans-serif;color:#1b1b1b;background:var(--bg);}
+  .wrap{max-width:1100px;margin:0 auto;padding:16px;}
+  h1{font-size:1.25rem;color:var(--akzent-dunkel);margin:.2rem 0 .8rem;}
+  .layout{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start;}
+  .figur{flex:2 1 560px;min-width:320px;}
+  .seite{flex:1 1 280px;min-width:260px;}
+  svg{width:100%;height:auto;touch-action:none;user-select:none;display:block;}
+  text{font-family:inherit;}
+  .panel{background:var(--panel);border:1px solid var(--rand);border-radius:10px;padding:14px 16px;margin-bottom:14px;}
+  .buehne{background:#fff;border:1px solid var(--rand);border-radius:10px;padding:6px;}
+  .schritte{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+  .gleichung{font-size:1.3rem;text-align:center;margin:10px 0 2px;}
+  .erklaer{font-size:.98rem;line-height:1.45;margin:6px 4px 0;min-height:4.4em;}
+  .lab{display:block;font-size:.9rem;color:var(--grau);margin:.6rem 0 .3rem;}
+  .lab:first-child{margin-top:0;}
+  input[type=range]{width:100%;accent-color:var(--akzent);}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .wahl .btns{margin-top:0;}
+  button{font:inherit;border:1px solid var(--akzent);background:#fff;color:var(--akzent);border-radius:8px;padding:7px 12px;cursor:pointer;min-height:40px;}
+  button:hover{background:var(--akzent);color:#fff;}
+  button:focus-visible{outline:3px solid #9db6e6;outline-offset:2px;}
+  button.aktiv{background:var(--akzent);color:#fff;}
+  button:disabled{opacity:.4;cursor:default;background:#fff;color:var(--akzent);}
+  button.gross{font-size:1.1rem;padding:10px 22px;background:var(--akzent);color:#fff;}
+  button.gross:hover{background:var(--akzent-dunkel);}
+  .schritte button{min-height:34px;padding:5px 11px;}
+  .wahlbox{max-width:640px;margin:0 auto;}
+  .vorschau{font-size:1.35rem;text-align:center;margin:18px 0 6px;}
+  .frage p{margin:.1rem 0 .5rem;font-weight:600;}
+  .frage .optionen{display:flex;flex-direction:column;gap:6px;}
+  .frage .optionen button{text-align:left;}
+  .frage button.richtig{background:#e8f5e9;border-color:var(--ok);color:var(--ok);}
+  .frage button.falsch{background:#fdecea;border-color:var(--falsch);color:var(--falsch);}
+  .feedback{font-size:.92rem;margin-top:8px;line-height:1.4;min-height:1.4em;}
+  .versteckt{display:none !important;}
+  .mitte{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  @media (prefers-reduced-motion: reduce){ #play{display:none;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 id="titel">Elektrophile Addition</h1>
+
+  <!-- Auswahl -->
+  <div id="scrWahl">
+    <div class="wahlbox panel wahl">
+      <span class="lab">Reaktion mit</span>
+      <div class="btns" id="wahlTyp">
+        <button data-v="X2">Halogen X₂</button>
+        <button data-v="HX">Halogenwasserstoff HX</button>
+      </div>
+      <span class="lab">Alken oder Alkin</span>
+      <div class="btns" id="wahlAlk">
+        <button data-v="ethen">Ethen</button>
+        <button data-v="propen">Propen</button>
+        <button data-v="allg" id="btnAllg"></button>
+        <button data-v="ethin">Ethin</button>
+        <button data-v="propin">Propin</button>
+      </div>
+      <span class="lab">Teilchen</span>
+      <div class="btns" id="wahlHal">
+        <button data-v="Cl"></button><button data-v="Br"></button><button data-v="I"></button><button data-v="X"></button>
+      </div>
+      <div class="vorschau" id="vorschau"></div>
+      <div class="mitte"><button class="gross" id="start">Mechanismus ansehen ▶</button></div>
+    </div>
+  </div>
+
+  <!-- Mechanismus -->
+  <div id="scrMech" class="versteckt">
+    <div class="schritte" id="schritte"></div>
+    <div class="layout">
+      <div class="figur">
+        <div class="buehne"><svg id="fig" viewBox="0 0 600 370" aria-label="Valenzstrichformeln mit Elektronenpfeilen"></svg></div>
+        <div class="gleichung" id="gleichung"></div>
+        <div class="erklaer" id="erklaer"></div>
+      </div>
+      <div class="seite">
+        <div class="panel">
+          <label class="lab" for="tS">Ablauf des Schritts</label>
+          <input id="tS" type="range" min="0" max="1000" step="1" value="0" aria-label="Ablauf des Schritts">
+          <div class="btns">
+            <button id="zurueck">◀ Zurück</button>
+            <button id="play">▶ Abspielen</button>
+            <button id="weiter">Weiter ▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gesamtmechanismus -->
+  <div id="scrEnde" class="versteckt">
+    <div class="buehne"><svg id="stand" viewBox="0 0 846 262" aria-label="Gesamter Mechanismus"></svg></div>
+    <div class="gleichung" id="gesamt"></div>
+    <div class="mitte">
+      <button id="zumMech">◀ Zurück</button>
+      <button id="neu" class="gross">Neue Auswahl</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const NS='http://www.w3.org/2000/svg';
+  const fig=$('fig'), stand=$('stand');
+  const clamp=x=>Math.max(0,Math.min(1,x));
+  const ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+  const lerp=(a,b,u)=>a+(b-a)*u;
+  const gross=s=>s.charAt(0).toUpperCase()+s.slice(1);
+
+  /* ---------- Stoffdaten ---------- */
+  const HAL={
+    Cl:{sym:'Cl',name:'Chlor',onium:'Chloronium-Ion',ion:'Chlorid-Ion',pre:'chlor',hx:'Hydrogenchlorid',hw:17},
+    Br:{sym:'Br',name:'Brom',onium:'Bromonium-Ion',ion:'Bromid-Ion',pre:'brom',hx:'Hydrogenbromid',hw:20},
+    I:{sym:'I',name:'Iod',onium:'Iodonium-Ion',ion:'Iodid-Ion',pre:'iod',hx:'Hydrogeniodid',hw:6},
+    X:{sym:'X',name:'Halogen',onium:'Halonium-Ion',ion:'Halogenid-Ion',pre:'halogen',hx:'Hydrogenhalogenid',hw:12}
+  };
+  const ALK={
+    ethen:{name:'Ethen',sub:['H','H','H','H'],f:'CH₂=CH₂',stamm:'ethan',
+      pX:x=>`CH₂${x}–CH₂${x}`, pH:x=>`CH₃–CH₂${x}`, nH:h=>gross(h.pre+'ethan')},
+    propen:{name:'Propen',sub:['H','H','H','CH₃'],f:'CH₂=CH–CH₃',stamm:'propan',markow:true,
+      pX:x=>`CH₂${x}–CH${x}–CH₃`, pH:x=>`CH₃–CH${x}–CH₃`, nH:h=>'2-'+gross(h.pre+'propan'), nH2:h=>'1-'+gross(h.pre+'propan')},
+    allgX:{name:'Alken',sub:['R¹','R²','R³','R⁴'],f:'R¹R²C=CR³R⁴',stamm:'alkan',
+      pX:x=>`R¹R²C${x}–C${x}R³R⁴`},
+    ethin:{name:'Ethin',f:'HC≡CH'},
+    propin:{name:'Propin',f:'HC≡C–CH₃'},
+    allgH:{name:'Alken',sub:['H','H','H','R'],f:'CH₂=CH–R',markow:true,
+      pH:x=>`CH₃–CH${x}–R`, nH:h=>`CH₃–CH${h.sym}–R`, nH2:h=>`CH₂${h.sym}–CH₂–R`}
+  };
+  let typ='X2', alkSel='propen', hal='I';
+  const X=()=>HAL[hal];
+  const A=()=>ALK[alkSel==='allg'?(typ==='X2'?'allgX':'allgH'):alkSel];
+  const reag=()=>typ==='X2'?X().sym+'₂':'H'+X().sym;
+  const reagName=()=>typ==='X2'?X().name:X().hx;
+  const prodName=()=>typ==='X2'?'1,2-Di'+X().pre+A().stamm:A().nH(X());
+  const istAlkin=()=>alkSel==='ethin'||alkSel==='propin';
+  const prodFormel=()=>istAlkin()?alkinDaten().e:typ==='X2'?A().pX(X().sym):A().pH(X().sym);
+  const markow=()=>typ==='HX'&&A().markow;
+
+  const lpR=hw=>Math.max(hw+10,21);
+  function hwOf(lab){ if(lab==='C'||lab==='H'||lab==='CH₃')return 11; if(lab==='R')return 12; if(lab.charAt(0)==='R')return 17; return X().hw; }
+
+  /* ---------- Geometrie ---------- */
+  const C1=[240,230], C2=[360,230];
+  const SUBA=[[185,175],[185,285],[415,175],[415,285]];
+  const SUBP=[[160,230],[240,305],[360,155],[440,230]];
+  const subBonds=[['C1','s1'],['C1','s2'],['C2','s3'],['C2','s4']];
+  const sub=(i,e,p)=>({id:'s'+(i+1),lab:A().sub[i],e,p:p||e});
+  const CC=()=>[{id:'C1',lab:'C',e:C1,p:C1},{id:'C2',lab:'C',e:C2,p:C2}];
+
+  function szenenX2(){
+    const x=X().sym, r=lpR(X().hw), XA0=[300,140], XB0=[300,60];
+    const S=[];
+    S.push({name:'Polarisierung', pol:true, deco:{wolke:1,strich:1,delta:[['Xa','δ+'],['Xb','δ−']]},
+      gl:`${A().f} + ${reag()} → π-Komplex`,
+      txt:`${reag()} nähert sich der Doppelbindung. Deren Elektronen stoßen die Elektronen im ${reag()} ab, das Molekül wird polarisiert. Es lagert sich locker an die Doppelbindung an (π-Komplex). Das ${x}<sup>δ+</sup> ist das Elektrophil.`,
+      atoms:[...CC(),sub(0,SUBA[0]),sub(1,SUBA[1]),sub(2,SUBA[2]),sub(3,SUBA[3]),
+             {id:'Xa',lab:x,s:[300,105],e:XA0,p:XA0,lp:[180,0,90]},
+             {id:'Xb',lab:x,s:[300,28],e:XB0,p:XB0,lp:[-90,180,0]}],
+      keep:[...subBonds,['C1','C2',-5,-5],['C1','C2',5,5],['Xa','Xb']], from:[], to:[], arrows:[],
+      q:{f:`Warum wird das ${reag()}-Molekül polarisiert?`,
+         o:[['Die Elektronen der Doppelbindung stoßen seine Elektronen ab.',true,`Richtig. Die Elektronen im ${reag()} werden zum äußeren Atom gedrängt. Das innere Atom wird δ+.`],
+            ['Licht spaltet das Molekül.',false,'Licht brauchte die radikalische Substitution. Hier läuft die Reaktion auch im Dunkeln.'],
+            [`${reag()} ist von sich aus polar.`,false,'Beide Atome sind gleich, es gibt keinen Unterschied in der Elektronegativität.']]}});
+    S.push({name:X().onium, a0:0.02, deco:{wolke:1,strich:1,delta:[['Xa','δ+'],['Xb','δ−']],aus:1},
+      gl:`π-Komplex → ${X().onium} + ${X().ion}`,
+      txt:`Ein Elektronenpaar der Doppelbindung greift das ${x}<sup>δ+</sup> an. Die Bindung im ${reag()} bricht, beide Elektronen gehen an das äußere ${x}-Atom. Ein freies Elektronenpaar des inneren ${x}-Atoms bindet an das zweite C-Atom. Es entstehen ein Dreiring mit positiver Ladung (${X().onium}) und ein ${X().ion}.`,
+      atoms:[...CC(),sub(0,SUBA[0]),sub(1,SUBA[1]),sub(2,SUBA[2]),sub(3,SUBA[3]),
+             {id:'Xa',lab:x,e:XA0,p:XA0,lp:[180,0,90],lpTo:[180,90],lpEnd:[-150,-30],chgTo:'+'},
+             {id:'Xb',lab:x,e:XB0,via:[540,40],p:[490,335],lp:[-90,180,0],lpTo:[-90,180,0,90],chgTo:'−'}],
+      keep:[...subBonds,['C1','C2',5,0]], from:[['C1','C2',-5,-5],['Xa','Xb']], to:[['Xa','C1'],['Xa','C2']],
+      arrows:[{p0:[300,220],c:[240,214],c2:[226,166],p2:[279,159],neu:['Xa','C1']},
+              {p0:[306,103],c:[346,96],p2:[300+r*0.6,78]},
+              {p0:[300+r+3,150],c:[300+r+38,168],p2:[361,206],neu:['Xa','C2']}],
+      q:{f:'Was bedeutet ein Pfeil mit voller Spitze?',
+         o:[['Ein Elektron wandert.',false,'Das ist der Einhakenpfeil aus der radikalischen Substitution.'],
+            ['Ein Elektronenpaar wandert.',true,'Richtig. Beim Doppelhakenpfeil wandern beide Elektronen gemeinsam.'],
+            ['Ein Atom wandert.',false,'Elektronenpfeile zeigen immer, wohin Elektronen wandern, nicht Atome.']]}});
+    S.push({name:'Rückseitenangriff', a0:0.17, pre:0.15,
+      gl:`${X().onium} + ${X().ion} → ${prodName()}`,
+      txt:`Das ${X().ion} greift mit einem freien Elektronenpaar ein C-Atom des Rings von der Rückseite an. Die Bindung zwischen diesem C-Atom und dem ${x}<sup>+</sup> öffnet sich, das Elektronenpaar geht an das ${x}-Atom. Es entsteht ${prodName()}.`,
+      atoms:[...CC(),sub(0,SUBA[0],SUBP[0]),sub(1,SUBA[1],SUBP[1]),sub(2,SUBA[2],SUBP[2]),sub(3,SUBA[3],SUBP[3]),
+             {id:'Xa',lab:x,e:XA0,p:[240,146],lp:[-150,-30],lpTo:[-90,180,0],chg:'+'},
+             {id:'Xb',lab:x,s:[490,335],e:[352,335],p:[360,316],lp:[-90,180,0,90],lpTo:[180,0,90],chg:'−'}],
+      keep:[...subBonds,['C1','C2'],['Xa','C1']], from:[['Xa','C2']], to:[['Xb','C2']],
+      arrows:[{p0:[343,308],c:[322,272],p2:[351,251]},
+              {p0:[331,186],c:[368,156],p2:[310+r*0.5,153]}],
+      q:qAddition()});
+    return S;
+  }
+  function qAddition(){
+    return {f:'Warum nennt man die Reaktion Addition?',
+      o:[['Zwei Teilchen reagieren zu einem einzigen Produkt.',true,'Richtig. Beide Teilchen landen vollständig im Produkt, die Doppelbindung wird zur Einfachbindung.'],
+         ['Ein Atom wird gegen ein anderes ausgetauscht.',false,'Das ist eine Substitution. Hier entsteht kein zweites Produkt.'],
+         ['Das Produkt hat eine Doppelbindung.',false,'Die Doppelbindung ist verbraucht. Das Produkt ist gesättigt.']]};
+  }
+  function kation(prim){ // Standbilder fuer den Vergleich
+    const at=[...CC()], keep=[...subBonds,['C1','C2']];
+    if(!prim){
+      at.push(sub(0,SUBP[0]),sub(1,SUBP[1]),sub(2,SUBA[2]),sub(3,SUBA[3]),{id:'Hn',lab:'H',e:[240,150],p:[240,150]});
+      keep.push(['Hn','C1']); at[1].chg='+'; at[1].chgAt='top';
+    } else {
+      at.push(sub(0,SUBA[0]),sub(1,SUBA[1]),sub(2,[440,230]),sub(3,[360,305]),{id:'Hn',lab:'H',e:[360,150],p:[360,150]});
+      keep.push(['Hn','C2']); at[0].chg='+'; at[0].chgAt='top';
+    }
+    return {atoms:at,keep,from:[],to:[],arrows:[]};
+  }
+  function szenenHX(){
+    const x=X().sym, r=lpR(X().hw), ion=X().ion, k=A().markow?'sekundäres Carbokation':'Carbokation';
+    const S=[];
+    S.push({name:'Carbokation', pre:0.2, a0:0.22, deco:{delta:[['Hn','δ+'],['Xb','δ−']],aus:1},
+      gl:`${A().f} + ${reag()} → ${gross(k)} + ${ion}`,
+      txt:`${reag()} ist bereits polar: Das H-Atom trägt δ+, das ${x}-Atom δ−. Ein Elektronenpaar der Doppelbindung greift das H<sup>δ+</sup> an und bindet es an ein C-Atom. Die Bindung im ${reag()} bricht, beide Elektronen gehen an das ${x}-Atom. Es entstehen ein Carbokation mit positiver Ladung am anderen C-Atom und ein ${ion}.`,
+      atoms:[...CC(),sub(0,SUBA[0],SUBP[0]),sub(1,SUBA[1],SUBP[1]),sub(2,SUBA[2]),sub(3,SUBA[3]),
+             {id:'Hn',lab:'H',s:[280,117],e:[280,150],p:[240,150]},
+             {id:'Xb',lab:x,s:[280,37],e:[280,70],via:[560,40],p:[490,335],lp:[-90,180,0],lpTo:[-90,180,0,90],chgTo:'−'}],
+      chgC2:true,
+      keep:[...subBonds,['C1','C2',5,0]], from:[['C1','C2',-5,-5],['Hn','Xb']], to:[['Hn','C1']],
+      arrows:[{p0:[300,220],c:[240,214],c2:[216,166],p2:[265,159],neu:['Hn','C1']},
+              {p0:[286,112],c:[323,106],p2:[280+r*0.6,88]}],
+      q:{f:`Warum muss ${reag()} nicht erst polarisiert werden?`,
+         o:[[`${reag()} ist bereits polar.`,true,`Richtig. ${x} ist elektronegativer als H. Das H-Atom trägt schon δ+ und ist das Elektrophil.`],
+            ['Licht polarisiert das Molekül.',false,'Licht spielt hier keine Rolle. Die Reaktion läuft auch im Dunkeln.'],
+            [`${reag()} enthält ein Radikal.`,false,'Hier gibt es keine ungepaarten Elektronen. Es wandern Elektronenpaare.']]}});
+    if(A().markow) S.push({name:'Markownikow-Regel', vergleich:true,
+      gl:'bevorzugt: sekundäres Carbokation',
+      txt:`Das H-Atom könnte auch an das mittlere C-Atom binden. Dann entstünde ein primäres Carbokation. Alkylgruppen stabilisieren die positive Ladung, deshalb entsteht vor allem das sekundäre Carbokation. Regel von Markownikow: Das H-Atom bindet an das C-Atom, das bereits mehr H-Atome trägt.`,
+      q:{f:`Warum entsteht vor allem ${A().nH(X())}?`,
+         o:[['Das sekundäre Carbokation ist stabiler.',true,'Richtig. Die Alkylgruppe stabilisiert die positive Ladung. Über dieses Carbokation läuft die Reaktion bevorzugt.'],
+            [`Das ${x}-Atom bindet immer am mittleren C-Atom.`,false,'Entscheidend ist, wo das H-Atom zuerst bindet und wie stabil das Carbokation dann ist.'],
+            ['Am C-Atom mit mehr H-Atomen ist mehr Platz.',false,'Platz ist hier nicht der Grund. Es geht um die Stabilität des Carbokations.']]}});
+    S.push({name:'Anlagerung', a0:0.17, pre:0.15,
+      gl:`${gross(k)} + ${ion} → ${prodName()}`,
+      txt:`Das ${ion} bindet mit einem freien Elektronenpaar an das positiv geladene C-Atom. Es entsteht ${prodName()}.`,
+      atoms:[...CC(),sub(0,SUBP[0]),sub(1,SUBP[1]),sub(2,SUBA[2],SUBP[2]),sub(3,SUBA[3],SUBP[3]),
+             {id:'Hn',lab:'H',e:[240,150],p:[240,150]},
+             {id:'Xb',lab:x,s:[490,335],e:[352,335],p:[360,316],lp:[-90,180,0,90],lpTo:[180,0,90],chg:'−'}],
+      chgC2out:true,
+      keep:[...subBonds,['C1','C2'],['Hn','C1']], from:[], to:[['Xb','C2']],
+      arrows:[{p0:[343,308],c:[322,272],p2:[351,251]}],
+      q:qAddition()});
+    return S;
+  }
+  const szenen=()=>istAlkin()?szenenAlkin():(typ==='X2'?szenenX2():szenenHX());
+
+  /* ---------- Alkine: Reaktionsgleichungen in Strukturformeln ---------- */
+  function alkinDaten(){
+    const x=X().sym, P=X().pre, G=gross(P), pro=alkSel==='propin';
+    const d=typ==='X2'
+      ?{m:pro?`CH${x}=C${x}–CH₃`:`CH${x}=CH${x}`, mn:'1,2-Di'+P+(pro?'propen':'ethen'),
+        e:pro?`CH${x}₂–C${x}₂–CH₃`:`CH${x}₂–CH${x}₂`, en:'1,1,2,2-Tetra'+P+(pro?'propan':'ethan')}
+      :{m:pro?`CH₂=C${x}–CH₃`:`CH₂=CH${x}`, mn:pro?'2-'+G+'propen':G+'ethen',
+        e:pro?`CH₃–C${x}₂–CH₃`:`CH₃–CH${x}₂`, en:pro?'2,2-Di'+P+'propan':'1,1-Di'+P+'ethan'};
+    d.f=pro?'HC≡C–CH₃':'HC≡CH'; d.name=pro?'Propin':'Ethin'; d.R=pro?'CH₃':'H'; d.pro=pro; return d;
+  }
+  function mol(list,bonds){
+    const atoms=list.map(([id,lab,x,y])=>({id,lab,e:[x,y],p:[x,y]})), by={};
+    atoms.forEach(a=>by[a.id]=a);
+    atoms.forEach(a=>{ if(a.lab!==X().sym)return;
+      const b=bonds.find(b=>b[0]===a.id||b[1]===a.id), o=by[b[0]===a.id?b[1]:b[0]];
+      const th=Math.atan2(o.e[1]-a.e[1],o.e[0]-a.e[0])*180/Math.PI; a.lp=[th+90,th+180,th+270];});
+    return {atoms,keep:bonds,from:[],to:[],arrows:[]};
+  }
+  function mAlkin(){ const R=alkinDaten().R;
+    return mol([['C1','C',-50,0],['C2','C',50,0],['h','H',-140,0],['r',R,140,0]],
+      [['C1','C2',-7,-7],['C1','C2',0,0],['C1','C2',7,7],['h','C1'],['C2','r']]); }
+  function mReag(){ const x=X().sym;
+    return typ==='X2'?mol([['a',x,-45,0],['b',x,45,0]],[['a','b']]):mol([['a','H',-40,0],['b',x,40,0]],[['a','b']]); }
+  function mAlken(){ const x=X().sym, R=alkinDaten().R, x2=typ==='X2';
+    return mol([['C1','C',-50,0],['C2','C',50,0],['a','H',-105,-55],['b',x2?x:'H',-105,55],['c',x,105,-55],['d',R,105,55]],
+      [['C1','C2',-4,-4],['C1','C2',4,4],['C1','a'],['C1','b'],['C2','c'],['C2','d']]); }
+  function mAlkan(){ const x=X().sym, R=alkinDaten().R, x2=typ==='X2';
+    return mol([['C1','C',-50,0],['C2','C',50,0],['t1',x2?x:'H',-50,-80],['l1','H',-130,0],['b1',x2?x:'H',-50,80],
+                ['t2',x,50,-80],['r2',R,130,0],['b2',x,50,80]],
+      [['C1','C2'],['C1','t1'],['C1','l1'],['C1','b1'],['C2','t2'],['C2','r2'],['C2','b2']]); }
+  function bbox(m){ let lo=1e9,hi=-1e9;
+    m.atoms.forEach(a=>{const h=hwOf(a.lab), l=a.lab==='CH₃'?12:(a.lp?lpR(h)+4:h+3), r=a.lab==='CH₃'?58:(a.lp?lpR(h)+4:h+3);
+      lo=Math.min(lo,a.e[0]-l); hi=Math.max(hi,a.e[0]+r);}); return [lo,hi]; }
+  function zeile(g,y,items,ops){
+    const s=0.55, gap=20;
+    const ws=items.map(it=>typeof it==='string'?34:(bbox(it[0])[1]-bbox(it[0])[0])*s);
+    let x=300-(ws.reduce((a,b)=>a+b,0)+gap*(items.length-1))/2;
+    items.forEach((it,i)=>{ const op=ops[i];
+      if(op>0){
+        if(it==='+'){ const tx=el('text',{x:x+17,y:y+9,'text-anchor':'middle','font-size':26,fill:'#111',opacity:op},g); tx.textContent='+'; }
+        else if(it==='→'){ el('line',{x1:x+2,y1:y,x2:x+27,y2:y,stroke:'#111','stroke-width':2.2,opacity:op},g);
+          el('path',{d:`M ${x+33} ${y} l -9 -5 l 0 10 z`,fill:'#111',opacity:op},g); }
+        else { const lo=bbox(it[0])[0], gg=el('g',{transform:`translate(${x-lo*s},${y}) scale(${s})`,opacity:op},g); render(gg,it[0],0);
+          const tx=el('text',{x:x+ws[i]/2,y:y+80,'text-anchor':'middle','font-size':13,fill:'var(--akzent-dunkel)',opacity:op},g); tx.textContent=it[1]; }
+      }
+      x+=ws[i]+gap; });
+  }
+  function renderGleichung(g,sc,t){
+    const d=alkinDaten(), a=clamp((t-0.3)/0.35);
+    const r1=[[mAlkin(),d.name],'+',[mReag(),reagName()],'→',[mAlken(),d.mn]];
+    const r2=[[mAlken(),d.mn],'+',[mReag(),reagName()],'→',[mAlkan(),d.en]];
+    if(sc.zweite){ zeile(g,95,r1,[1,1,1,1,1]); const b=clamp(t/0.25); zeile(g,268,r2,[b,b,b,a,a]); }
+    else zeile(g,95,r1,[1,1,1,a,a]);
+  }
+  function szenenAlkin(){
+    const d=alkinDaten(), r=reag(), x=X().sym, wer=typ==='X2'?`Ein ${r}-Molekül`:`Ein ${X().hx}-Molekül`;
+    return [
+      {name:'Erstes '+(typ==='X2'?r:'H'+x)+'-Molekül', gleichung:true, gl:`${d.f} + ${r} → ${d.m}`,
+       txt:typ==='X2'
+        ?`${wer} addiert an die Dreifachbindung. Aus der Dreifachbindung wird eine Doppelbindung, an jedes C-Atom bindet ein ${x}-Atom. Es entsteht ${d.mn}. Der Ablauf entspricht der Addition an Alkene.`
+        :`${wer} addiert an die Dreifachbindung. Aus der Dreifachbindung wird eine Doppelbindung.${d.pro?' Nach der Markownikow-Regel bindet das H-Atom an das C-Atom mit mehr H-Atomen.':''} Es entsteht ${d.mn}.`},
+      {name:'Zweites '+(typ==='X2'?r:'H'+x)+'-Molekül', gleichung:true, zweite:true, gl:`${d.m} + ${r} → ${d.e}`,
+       txt:typ==='X2'
+        ?`An der verbleibenden Doppelbindung addiert ein zweites ${r}-Molekül. Aus der Doppelbindung wird eine Einfachbindung. Es entsteht ${d.en}, das Molekül ist gesättigt.`
+        :`An der Doppelbindung addiert ein zweites ${X().hx}-Molekül. Wieder bindet das H-Atom an das C-Atom mit mehr H-Atomen, das zweite ${x}-Atom landet am selben C-Atom wie das erste. Es entsteht ${d.en}.`}
+    ];
+  }
+
+  /* ---------- Zeichnen ---------- */
+  function el(name,a,parent){const e=document.createElementNS(NS,name);for(const k in a)e.setAttribute(k,a[k]);parent.appendChild(e);return e;}
+  function bez(a,u){ if(a.c2){const w=[(1-u)**3,3*(1-u)**2*u,3*(1-u)*u*u,u**3];
+      return [0,1].map(k=>w[0]*a.p0[k]+w[1]*a.c[k]+w[2]*a.c2[k]+w[3]*a.p2[k]);}
+    return [(1-u)*(1-u)*a.p0[0]+2*(1-u)*u*a.c[0]+u*u*a.p2[0],(1-u)*(1-u)*a.p0[1]+2*(1-u)*u*a.c[1]+u*u*a.p2[1]];}
+  function drawLP(g,x,y,hw,angs,op){
+    if(op<=0)return;
+    angs.forEach(d=>{const r=d*Math.PI/180, cx=x+lpR(hw)*Math.cos(r), cy=y+24*Math.sin(r), tx=-Math.sin(r)*12, ty=Math.cos(r)*12;
+      el('line',{x1:cx-tx,y1:cy-ty,x2:cx+tx,y2:cy+ty,stroke:'#111','stroke-width':2.4,'stroke-linecap':'round',opacity:op},g);});
+  }
+  function bondLine(g,pa,pb,ha,hb,off,op,dash){
+    if(op<=0)return;
+    const dx=pb[0]-pa[0],dy=pb[1]-pa[1],L=Math.hypot(dx,dy); if(L<1)return;
+    const ux=dx/L,uy=dy/L, nx=-uy*off, ny=ux*off;
+    const ra=Math.hypot(ha*ux,15*uy)+6, rb=Math.hypot(hb*ux,15*uy)+6;
+    el('line',{x1:pa[0]+ux*ra+nx,y1:pa[1]+uy*ra+ny,x2:pb[0]-ux*rb+nx,y2:pb[1]-uy*rb+ny,stroke:dash?'#888':'#111','stroke-width':dash?2:2.4,'stroke-dasharray':dash?'5 5':'none',opacity:op},g);
+  }
+  function head(a){
+    const q=a.c2||a.c, dx=a.p2[0]-q[0],dy=a.p2[1]-q[1],L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L,s=12,w=0.42;
+    const p=ang=>[a.p2[0]-s*(ux*Math.cos(ang)-uy*Math.sin(ang)),a.p2[1]-s*(ux*Math.sin(ang)+uy*Math.cos(ang))];
+    const l=p(w), r=p(-w);
+    return `M ${a.p2[0]} ${a.p2[1]} L ${l[0]} ${l[1]} L ${r[0]} ${r[1]} Z`;
+  }
+  function charge(g,x,y,sym,op){
+    if(op<=0)return;
+    const cg=el('g',{opacity:op},g);
+    el('circle',{cx:x,cy:y,r:10,fill:'#fff',stroke:'#111','stroke-width':1.6},cg);
+    el('line',{x1:x-5,y1:y,x2:x+5,y2:y,stroke:'#111','stroke-width':1.8},cg);
+    if(sym==='+')el('line',{x1:x,y1:y-5,x2:x,y2:y+5,stroke:'#111','stroke-width':1.8},cg);
+  }
+  function label(g,lab,x,y){
+    const st=lab==='CH₃';
+    const tx=el('text',{x:st?x-11:x,y:y+11,'font-size':32,'text-anchor':st?'start':'middle',fill:'#111'},g);
+    tx.textContent=lab;
+  }
+  function zeiten(sc,t){
+    const n=sc.arrows.length, a0=sc.a0||0, aL=0.15*n+0.05;
+    const e0=a0+aL+0.02, e1=e0+0.16, m0=e1+0.03;
+    return {
+      pPre: sc.pol?ease(clamp(t/0.45)):(sc.pre?ease(clamp(t/sc.pre)):1),
+      pA: n?clamp((t-a0)/aL):0, e0,
+      pE: n?ease(clamp((t-e0)/0.16)):0,
+      pM: n?ease(clamp((t-m0)/(0.98-m0))):0,
+      nb: n?clamp((t-e1)/0.04):0,
+      lpm: n?clamp((t-e1)/0.1):0
+    };
+  }
+  const tPfeile=sc=>zeiten(sc,0).e0-0.005;   // alle Pfeile sichtbar, noch nichts bewegt
+
+  function render(g,sc,t){
+    if(sc.gleichung) return renderGleichung(g,sc,t);
+    if(sc.vergleich) return renderVergleich(g,t);
+    const z=zeiten(sc,t), pos={}, hw={};
+    sc.atoms.forEach(a=>{
+      hw[a.id]=hwOf(a.lab);
+      const p0=a.s?[lerp(a.s[0],a.e[0],z.pPre),lerp(a.s[1],a.e[1],z.pPre)]:a.e.slice(), u=z.pM;
+      pos[a.id]=a.via?[(1-u)*(1-u)*p0[0]+2*(1-u)*u*a.via[0]+u*u*a.p[0],(1-u)*(1-u)*p0[1]+2*(1-u)*u*a.via[1]+u*u*a.p[1]]
+                     :[lerp(p0[0],a.p[0],u),lerp(p0[1],a.p[1],u)];
+    });
+    // Deko: Elektronenwolke, pi-Komplex, Partialladungen
+    let f=0; const d=sc.deco;
+    if(d){ f=sc.pol?clamp((t-0.45)/0.2):(d.aus?1-clamp((t-z.e0)/0.1):1); }
+    const strich=d&&d.strich?(sc.pol?clamp((t-0.7)/0.15):1-clamp((t-(sc.a0||0))/0.08)):0;
+    if(d&&d.wolke&&f>0) el('ellipse',{cx:300,cy:230,rx:66,ry:22,fill:'#dfe9fb',stroke:'#9db6e6','stroke-dasharray':'4 3','stroke-width':1.2,opacity:f},g);
+    if(strich>0){ const xa=pos.Xa; el('line',{x1:xa[0],y1:xa[1]+30,x2:xa[0],y2:222,stroke:'#555','stroke-width':2,'stroke-dasharray':'5 4',opacity:strich},g); }
+    const off=b=>b.length>2?lerp(b[2],b[3],z.pM):0;
+    sc.keep.forEach(b=>bondLine(g,pos[b[0]],pos[b[1]],hw[b[0]],hw[b[1]],off(b),1));
+    sc.from.forEach(b=>bondLine(g,pos[b[0]],pos[b[1]],hw[b[0]],hw[b[1]],off(b),z.pE>0?0:1));
+    sc.to.forEach(b=>bondLine(g,pos[b[0]],pos[b[1]],hw[b[0]],hw[b[1]],off(b),z.nb));
+    sc.atoms.forEach(a=>{
+      const [x,y]=pos[a.id], h=hw[a.id];
+      label(g,a.lab,x,y);
+      if(a.lp){
+        if(a.lpTo){
+          const m=z.lpm;
+          if(a.lpEnd){
+            drawLP(g,x,y,h,a.lp.filter(s=>!a.lpTo.includes(s)),1-m);
+            drawLP(g,x,y,h,a.lp.filter(s=>a.lpTo.includes(s)),1-z.pM);
+            drawLP(g,x,y,h,a.lpEnd,z.pM);
+          } else {
+            drawLP(g,x,y,h,a.lp.filter(s=>a.lpTo.includes(s)),1);
+            drawLP(g,x,y,h,a.lp.filter(s=>!a.lpTo.includes(s)),1-m);
+            drawLP(g,x,y,h,a.lpTo.filter(s=>!a.lp.includes(s)),m);
+          }
+        } else drawLP(g,x,y,h,a.lp,1);
+      }
+      let cx=x+lpR(h)+14, cy=y-22;
+      if(a.chgAt==='top'||(a.id==='C2'&&(sc.chgC2||sc.chgC2out))){cx=x; cy=y-40;}
+      const n=sc.arrows.length;
+      if(a.chg) charge(g,cx,cy,a.chg,n?1-z.lpm:1);
+      if(a.chgTo) charge(g,cx,cy,a.chgTo,z.lpm);
+      if(a.id==='C2'&&sc.chgC2) charge(g,cx,cy,'+',z.lpm);
+      if(a.id==='C2'&&sc.chgC2out) charge(g,cx,cy,'+',1-z.lpm);
+    });
+    if(d&&d.delta&&f>0) d.delta.forEach(([id,s])=>{
+      const p=pos[id], dx=id==='Hn'?hw[id]+20:lpR(hw[id])+10;
+      const tx=el('text',{x:p[0]+dx,y:p[1]-6,'font-size':20,'font-style':'italic',fill:s==='δ+'?'var(--dplus)':'var(--dminus)',opacity:f},g); tx.textContent=s;});
+    const n=sc.arrows.length, arrOp=1-z.pM;
+    sc.arrows.forEach((a,i)=>{
+      const pi=ease(clamp(z.pA*n-i)); if(pi<=0||arrOp<=0)return;
+      if(a.neu&&z.nb<1){ const [u,v]=a.neu; bondLine(g,pos[u],pos[v],hw[u],hw[v],0,clamp(pi*1.5)*(1-z.nb),true); }
+      const P=el('path',{d:a.c2?`M ${a.p0[0]} ${a.p0[1]} C ${a.c[0]} ${a.c[1]} ${a.c2[0]} ${a.c2[1]} ${a.p2[0]} ${a.p2[1]}`:`M ${a.p0[0]} ${a.p0[1]} Q ${a.c[0]} ${a.c[1]} ${a.p2[0]} ${a.p2[1]}`,fill:'none',stroke:'var(--pfeil)','stroke-width':2.6,'stroke-linecap':'round',opacity:arrOp},g);
+      if(pi<1){ const len=P.getTotalLength(); P.setAttribute('stroke-dasharray',len); P.setAttribute('stroke-dashoffset',len*(1-pi)); }
+      if(pi>0.97) el('path',{d:head(a),fill:'var(--pfeil)',stroke:'var(--pfeil)','stroke-width':1.2,'stroke-linejoin':'round',opacity:arrOp},g);
+    });
+    if(z.pE>0&&z.nb<1) sc.arrows.forEach(a=>{
+      [z.pE,Math.max(0,z.pE-0.08)].forEach(u=>{const p=bez(a,u); el('circle',{cx:p[0],cy:p[1],r:4.5,fill:'var(--pfeil)',opacity:1-z.nb},g);});
+    });
+  }
+
+  function renderVergleich(g,t){
+    const fb=clamp(t/0.35), fl=clamp((t-0.4)/0.2);
+    const teil=(dx,prim,op,t1,t2,farbe)=>{
+      const gg=el('g',{transform:`translate(${dx},40) scale(0.62) translate(-140,-100)`,opacity:op},g);
+      render(gg,kation(prim),0);
+      const a=el('text',{x:dx+121,y:225,'text-anchor':'middle','font-size':17,'font-weight':600,fill:farbe,opacity:fl*Math.max(op,.6)},g); a.textContent=t1;
+      const b=el('text',{x:dx+121,y:250,'text-anchor':'middle','font-size':16,fill:'#333',opacity:fl*Math.max(op,.6)},g); b.textContent=t2;
+    };
+    teil(36,false,1,'sekundäres Carbokation','→ '+A().nH(X()),'var(--akzent-dunkel)');
+    teil(322,true,0.15+0.35*fb,'primäres Carbokation','→ '+A().nH2(X()),'#777');
+    const h=el('text',{x:157,y:290,'text-anchor':'middle','font-size':16,fill:'var(--ok)',opacity:fl},g); h.textContent='stabiler, Hauptprodukt';
+    const k=el('text',{x:443,y:290,'text-anchor':'middle','font-size':16,fill:'#777',opacity:fl},g); k.textContent='weniger stabil';
+    el('line',{x1:300,y1:40,x2:300,y2:300,stroke:'#ccc','stroke-width':1.5,opacity:fb},g);
+  }
+
+  function draw(){ fig.innerHTML=''; render(el('g',{},fig),S[step],t); $('tS').value=Math.round(t*1000); }
+
+  /* ---------- Standbild ---------- */
+  function drawStand(){
+    stand.innerHTML='';
+    if(istAlkin()){ stand.setAttribute('viewBox','0 0 600 370'); render(el('g',{},stand),S[1],1);
+      $('gesamt').textContent=`${alkinDaten().f} + 2 ${reag()} → ${alkinDaten().e}`; return; }
+    stand.setAttribute('viewBox','0 0 846 262');
+    const sc=S, last=sc[sc.length-1], erst=sc[typ==='X2'?1:0];
+    const panels=[[erst,tPfeile(erst)],[last,tPfeile(last)],[last,1]];
+    const k=A().markow?'sekundäres Carbokation':'Carbokation';
+    const labs=typ==='X2'?['π-Komplex',`${X().onium} + ${X().ion}`,prodName()]
+                         :[`${A().name} + ${X().hx}`,`${k} + ${X().ion}`,prodName()+(A().markow?' (Hauptprodukt)':'')];
+    panels.forEach(([s,tt],i)=>{
+      const x0=i*302;
+      const g=el('g',{transform:`translate(${x0},0) scale(0.62) translate(-140,-14)`},stand);
+      render(g,s,tt);
+      const tx=el('text',{x:x0+121,y:250,'text-anchor':'middle','font-size':15,fill:'var(--akzent-dunkel)','font-weight':600},stand); tx.textContent=labs[i];
+      if(i<2){ const ax=x0+252; el('line',{x1:ax,y1:118,x2:ax+36,y2:118,stroke:'#333','stroke-width':2.4},stand);
+        el('path',{d:`M ${ax+40} 118 l -11 -6 l 0 12 z`,fill:'#333'},stand); }
+    });
+    $('gesamt').textContent=`${A().f} + ${reag()} → ${prodFormel()}`;
+  }
+
+  /* ---------- Zustand und Steuerung ---------- */
+  let S=szenen(), step=0, t=0, playing=false, raf=null, last=0, wait=0;
+
+  function zeigeWahl(){
+    const tb=$('wahlTyp').children, ab=$('wahlAlk').children, hb=$('wahlHal').children;
+    [...tb].forEach(b=>b.classList.toggle('aktiv',b.dataset.v===typ));
+    [...ab].forEach(b=>b.classList.toggle('aktiv',b.dataset.v===alkSel));
+    $('btnAllg').textContent=typ==='X2'?'R¹R²C=CR³R⁴':'CH₂=CH–R';
+    [...hb].forEach(b=>{b.classList.toggle('aktiv',b.dataset.v===hal); b.textContent=typ==='X2'?b.dataset.v+'₂':'H'+b.dataset.v;});
+    $('vorschau').textContent=istAlkin()?`${A().f} + 2 ${reag()} → ${prodFormel()}`:`${A().f} + ${reag()} → ${prodFormel()}`;
+    $('start').textContent=istAlkin()?'Reaktion ansehen ▶':'Mechanismus ansehen ▶';
+    $('titel').textContent='Elektrophile Addition';
+  }
+  function screen(n){ ['scrWahl','scrMech','scrEnde'].forEach(id=>$(id).classList.toggle('versteckt',id!==n)); }
+
+  function setStep(s){ step=Math.max(0,Math.min(S.length-1,s)); t=0; stop(); aktualisiere(); }
+  function aktualisiere(){
+    const sc=S[step];
+    $('titel').textContent=`Elektrophile Addition: ${A().name} und ${reagName()}`;
+    const sb=$('schritte'); sb.innerHTML='';
+    S.forEach((s,i)=>{const b=document.createElement('button'); b.textContent=(i+1)+'  '+s.name; b.classList.toggle('aktiv',i===step);
+      b.addEventListener('click',()=>setStep(i)); sb.appendChild(b);});
+    $('gleichung').textContent=sc.gl; $('erklaer').innerHTML=sc.txt;
+    $('zurueck').disabled=false;
+    $('weiter').textContent=(step===S.length-1&&t>=1)?endName()+' ▶':'Weiter ▶';
+    draw();
+  }
+  const endName=()=>istAlkin()?'Gesamtreaktion':'Gesamtmechanismus';
+  function zumEnde(){ stop(); screen('scrEnde'); $('titel').textContent=`${endName()}: ${A().name} und ${reagName()}`; drawStand(); }
+  function stop(){ playing=false; cancelAnimationFrame(raf); $('play').textContent='▶ Abspielen'; }
+  function tick(now){
+    if(!playing)return;
+    const dt=Math.min(64,now-last); last=now;
+    if(t<1){ t=Math.min(1,t+dt/8000); draw(); if(t>=1){wait=0; $('weiter').textContent=step===S.length-1?endName()+' ▶':'Weiter ▶';} }
+    else { wait+=dt; if(wait>1600){ if(step<S.length-1){ step++; t=0; aktualisiere(); } else { zumEnde(); return; } } }
+    raf=requestAnimationFrame(tick);
+  }
+
+  $('wahlTyp').addEventListener('click',e=>{const v=e.target.dataset.v; if(!v)return; typ=v; zeigeWahl();});
+  $('wahlAlk').addEventListener('click',e=>{const v=e.target.dataset.v; if(!v)return; alkSel=v; zeigeWahl();});
+  $('wahlHal').addEventListener('click',e=>{const v=e.target.dataset.v; if(!v)return; hal=v; zeigeWahl();});
+  $('start').addEventListener('click',()=>{ S=szenen(); screen('scrMech'); setStep(0); });
+  $('play').addEventListener('click',()=>{
+    if(playing){stop();return;}
+    if(step===S.length-1&&t>=1){ zumEnde(); return; }
+    playing=true; $('play').textContent='❚❚ Pause'; last=performance.now(); raf=requestAnimationFrame(tick);
+  });
+  $('weiter').addEventListener('click',()=>{ if(t<1){ stop(); t=1; aktualisiere(); } else if(step<S.length-1) setStep(step+1); else zumEnde(); });
+  $('zurueck').addEventListener('click',()=>{
+    if(t>0){ stop(); t=0; aktualisiere(); } else if(step>0) setStep(step-1); else { stop(); screen('scrWahl'); zeigeWahl(); } });
+  $('tS').addEventListener('input',()=>{ stop(); t=$('tS').value/1000; draw();
+    $('weiter').textContent=(step===S.length-1&&t>=1)?endName()+' ▶':'Weiter ▶'; });
+  $('zumMech').addEventListener('click',()=>{ screen('scrMech'); step=S.length-1; t=1; aktualisiere(); });
+  $('neu').addEventListener('click',()=>{ screen('scrWahl'); zeigeWahl(); });
+  document.addEventListener('keydown',e=>{ if(e.target.tagName==='INPUT'||$('scrMech').classList.contains('versteckt'))return;
+    if(e.key==='ArrowRight')$('weiter').click(); if(e.key==='ArrowLeft')$('zurueck').click(); });
+
+  zeigeWahl();
+})();
+</script>
+</body>
+</html>
